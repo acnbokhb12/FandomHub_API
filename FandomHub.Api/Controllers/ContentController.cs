@@ -42,14 +42,7 @@ namespace FandomHub.Api.Controllers
 				});
 			}
 			 
-		}
-
-		[Authorize]
-		[HttpGet("test")]
-		public IActionResult Test()
-		{
-			return Ok("OK");
-		}
+		} 
 
 
 		private string? GetUserId()
