@@ -401,5 +401,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 
-appsettings.json
+FandomHub.Api/appsettings.json
 
