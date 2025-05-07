@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35219.272
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FandomHub.Api", "FandomHub.Api\FandomHub.Api.csproj", "{3E788C8D-54F5-4DB6-A5A7-DBE48EA3CEC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FandomHub.Domain", "FandomHub.Domain\FandomHub.Domain.csproj", "{190130D2-8FFC-4333-AD27-15D21662F7D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FandomHub.Application", "FandomHub.Application\FandomHub.Application.csproj", "{A2194C44-AD6D-41A1-824B-D82C021657E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FandomHub.Infrastructure", "FandomHub.Infrastructure\FandomHub.Infrastructure.csproj", "{37AA4BA1-7BCE-4BED-B254-0C001739F6BA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E788C8D-54F5-4DB6-A5A7-DBE48EA3CEC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E788C8D-54F5-4DB6-A5A7-DBE48EA3CEC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E788C8D-54F5-4DB6-A5A7-DBE48EA3CEC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E788C8D-54F5-4DB6-A5A7-DBE48EA3CEC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{190130D2-8FFC-4333-AD27-15D21662F7D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{190130D2-8FFC-4333-AD27-15D21662F7D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{190130D2-8FFC-4333-AD27-15D21662F7D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{190130D2-8FFC-4333-AD27-15D21662F7D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2194C44-AD6D-41A1-824B-D82C021657E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2194C44-AD6D-41A1-824B-D82C021657E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2194C44-AD6D-41A1-824B-D82C021657E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2194C44-AD6D-41A1-824B-D82C021657E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37AA4BA1-7BCE-4BED-B254-0C001739F6BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37AA4BA1-7BCE-4BED-B254-0C001739F6BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37AA4BA1-7BCE-4BED-B254-0C001739F6BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37AA4BA1-7BCE-4BED-B254-0C001739F6BA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EEE17171-DB7B-4BC0-87AF-5FC88787BDA5}
+	EndGlobalSection
+EndGlobal

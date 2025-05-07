@@ -1,0 +1,18 @@
+{
+  "Jwt": {
+    "Key": "Your_Key",
+    "Issuer": "Your_Issuer",
+    "Audience": "Your_Audience",
+    "ExpiryTime": 120
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=Your_Server;uid=Your_username;pwd=Your_pass;Database=Your_Database;TrustServerCertificate=True"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
