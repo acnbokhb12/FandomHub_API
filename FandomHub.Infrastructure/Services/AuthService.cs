@@ -51,9 +51,17 @@ namespace FandomHub.Infrastructure.Services
 			{ 
 				throw new Exception("Username is already taken.");
 			}
+			var existEmail = await _userManager.FindByEmailAsync(request.Email);
+			if (existEmail != null)
+			{
+				throw new Exception("Email is already taken.");
+			}
+
 			var user = new ApplicationUser
 			{ 
 				UserName = request.UserName,
+				Email = request.Email,
+				BirthDay = request.BirthDay
 			};
 			var result = await _userManager.CreateAsync(user,request.Password);
 			if (!result.Succeeded)

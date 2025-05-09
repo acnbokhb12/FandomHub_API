@@ -42,7 +42,7 @@ namespace FandomHub.Api.Controllers
 				});
 			}
 			 
-		} 
+		}	
 
 
 		private string? GetUserId()

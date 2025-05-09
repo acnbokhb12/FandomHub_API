@@ -10,5 +10,7 @@ namespace FandomHub.Infrastructure.Identity
 	public class ApplicationUser : IdentityUser
 	{
 		public string? ImgUrl { get; set; }
+
+		public DateTime? BirthDay { get; set; }
 	}
 }
