@@ -78,6 +78,8 @@ namespace FandomHub.Infrastructure.Data
 				entity.Property(c => c.Title)
 					  .IsRequired()
 					  .HasMaxLength(200);
+				entity.Property(c=>c.SubTitle)
+					  .HasMaxLength(200);
 
 				entity.Property(c => c.Slug)
 					  .IsRequired()

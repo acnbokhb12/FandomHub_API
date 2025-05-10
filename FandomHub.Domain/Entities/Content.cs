@@ -12,6 +12,8 @@ namespace FandomHub.Domain.Entities
 
 		public string? Title { get; set; }
 
+		public string? SubTitle { get; set; }
+
 		public string? Slug { get; set; }
 
 		public string? CoverImage { get; set; }
