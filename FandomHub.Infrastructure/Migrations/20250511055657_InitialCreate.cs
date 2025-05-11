@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FandomHub.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,6 +31,7 @@ namespace FandomHub.Infrastructure.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ImgUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BirthDay = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -52,34 +53,66 @@ namespace FandomHub.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "Category",
                 columns: table => new
                 {
                     CategoryID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Slug = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    isActive = table.Column<bool>(type: "bit", nullable: false)
+                    Slug = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    isActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.CategoryID);
+                    table.PrimaryKey("PK_Category", x => x.CategoryID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ContentTypes",
+                name: "Community",
                 columns: table => new
                 {
-                    ContentTypeID = table.Column<int>(type: "int", nullable: false)
+                    CommunityId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Slug = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    isActive = table.Column<bool>(type: "bit", nullable: false)
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    LogoImage = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    CoverImage = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Slug = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ContentText = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    Summary = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    isActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeleteBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeleteAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ContentTypes", x => x.ContentTypeID);
+                    table.PrimaryKey("PK_Community", x => x.CommunityId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EditHistory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TargetEntityType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    TargetEntityId = table.Column<int>(type: "int", nullable: false),
+                    PreviousContent = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChangeSummary = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    isActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeleteBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeleteAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EditHistory", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,91 +222,108 @@ namespace FandomHub.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Contents",
+                name: "Character",
                 columns: table => new
                 {
-                    ContentID = table.Column<int>(type: "int", nullable: false)
+                    CharacterId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Slug = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    CoverImage = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
-                    ContentText = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Summary = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    CreatedById = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsPublished = table.Column<bool>(type: "bit", nullable: false),
+                    CommunityId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Avatar = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     isActive = table.Column<bool>(type: "bit", nullable: false),
-                    ContentTypeID = table.Column<int>(type: "int", nullable: false)
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeleteBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeleteAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Contents", x => x.ContentID);
+                    table.PrimaryKey("PK_Character", x => x.CharacterId);
                     table.ForeignKey(
-                        name: "FK_Contents_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Contents_ContentTypes_ContentTypeID",
-                        column: x => x.ContentTypeID,
-                        principalTable: "ContentTypes",
-                        principalColumn: "ContentTypeID",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Character_Community_CommunityId",
+                        column: x => x.CommunityId,
+                        principalTable: "Community",
+                        principalColumn: "CommunityId",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ContentCategories",
+                name: "CommunityCategory",
                 columns: table => new
                 {
-                    ContentID = table.Column<int>(type: "int", nullable: false),
+                    CommunityId = table.Column<int>(type: "int", nullable: false),
                     CategoryID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ContentCategories", x => new { x.ContentID, x.CategoryID });
+                    table.PrimaryKey("PK_CommunityCategory", x => new { x.CommunityId, x.CategoryID });
                     table.ForeignKey(
-                        name: "FK_ContentCategories_Categories_CategoryID",
+                        name: "FK_CommunityCategory_Category_CategoryID",
                         column: x => x.CategoryID,
-                        principalTable: "Categories",
+                        principalTable: "Category",
                         principalColumn: "CategoryID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ContentCategories_Contents_ContentID",
-                        column: x => x.ContentID,
-                        principalTable: "Contents",
-                        principalColumn: "ContentID",
+                        name: "FK_CommunityCategory_Community_CommunityId",
+                        column: x => x.CommunityId,
+                        principalTable: "Community",
+                        principalColumn: "CommunityId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ContentEditHistories",
+                name: "CharacterAttributeGroup",
                 columns: table => new
                 {
-                    HistoryID = table.Column<int>(type: "int", nullable: false)
+                    CharacterAttributeGroupId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ChangeSummary = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
-                    OldContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    isActive = table.Column<bool>(type: "bit", nullable: false),
-                    EditedById = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
-                    EditedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ContentID = table.Column<int>(type: "int", nullable: false)
+                    CharacterId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeleteBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeleteAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ContentEditHistories", x => x.HistoryID);
+                    table.PrimaryKey("PK_CharacterAttributeGroup", x => x.CharacterAttributeGroupId);
                     table.ForeignKey(
-                        name: "FK_ContentEditHistories_AspNetUsers_EditedById",
-                        column: x => x.EditedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        name: "FK_CharacterAttributeGroup_Character_CharacterId",
+                        column: x => x.CharacterId,
+                        principalTable: "Character",
+                        principalColumn: "CharacterId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CharacterAttribute",
+                columns: table => new
+                {
+                    CharacterAttributeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CharacterAttributeGroupId = table.Column<int>(type: "int", nullable: false),
+                    Key = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeleteBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeleteAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CharacterAttribute", x => x.CharacterAttributeId);
                     table.ForeignKey(
-                        name: "FK_ContentEditHistories_Contents_ContentID",
-                        column: x => x.ContentID,
-                        principalTable: "Contents",
-                        principalColumn: "ContentID",
+                        name: "FK_CharacterAttribute_CharacterAttributeGroup_CharacterAttributeGroupId",
+                        column: x => x.CharacterAttributeGroupId,
+                        principalTable: "CharacterAttributeGroup",
+                        principalColumn: "CharacterAttributeGroupId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -317,47 +367,30 @@ namespace FandomHub.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_Slug",
-                table: "Categories",
+                name: "IX_Category_Slug",
+                table: "Category",
                 column: "Slug",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContentCategories_CategoryID",
-                table: "ContentCategories",
+                name: "IX_Character_CommunityId",
+                table: "Character",
+                column: "CommunityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CharacterAttribute_CharacterAttributeGroupId",
+                table: "CharacterAttribute",
+                column: "CharacterAttributeGroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CharacterAttributeGroup_CharacterId",
+                table: "CharacterAttributeGroup",
+                column: "CharacterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommunityCategory_CategoryID",
+                table: "CommunityCategory",
                 column: "CategoryID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ContentEditHistories_ContentID",
-                table: "ContentEditHistories",
-                column: "ContentID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ContentEditHistories_EditedById",
-                table: "ContentEditHistories",
-                column: "EditedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Contents_ContentTypeID",
-                table: "Contents",
-                column: "ContentTypeID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Contents_CreatedById",
-                table: "Contents",
-                column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Contents_Slug",
-                table: "Contents",
-                column: "Slug",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ContentTypes_Slug",
-                table: "ContentTypes",
-                column: "Slug",
-                unique: true);
         }
 
         /// <inheritdoc />
@@ -379,25 +412,31 @@ namespace FandomHub.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ContentCategories");
+                name: "CharacterAttribute");
 
             migrationBuilder.DropTable(
-                name: "ContentEditHistories");
+                name: "CommunityCategory");
+
+            migrationBuilder.DropTable(
+                name: "EditHistory");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "Contents");
-
-            migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "ContentTypes");
+                name: "CharacterAttributeGroup");
+
+            migrationBuilder.DropTable(
+                name: "Category");
+
+            migrationBuilder.DropTable(
+                name: "Character");
+
+            migrationBuilder.DropTable(
+                name: "Community");
         }
     }
 }

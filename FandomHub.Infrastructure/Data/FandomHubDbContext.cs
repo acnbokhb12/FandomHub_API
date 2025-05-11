@@ -15,28 +15,32 @@ namespace FandomHub.Infrastructure.Data
 		public FandomHubDbContext(DbContextOptions<FandomHubDbContext> options) : base(options)
 		{
 		}
-
-		public virtual DbSet<Content> Contents { get; set; }
-		public virtual DbSet<ContentType> ContentTypes { get; set; }
+		 
 		public virtual DbSet<Category> Categories { get; set; }
-		public virtual DbSet<ContentCategory> ContentCategories { get; set; }
-		public virtual DbSet<ContentEditHistory> ContentEditHistories { get; set; }
+		public virtual DbSet<Character> Characters { get; set; }
+		public virtual DbSet<CharacterAttribute> CharacterAttributes { get; set; }
+		public virtual DbSet<CharacterAttributeGroup> CharacterAttributesGroup { get; set; }
+		public virtual DbSet<Community> Communities { get; set; }
+		public virtual DbSet<CommunityCategory> CommunityCategories { get; set; } 
+		public virtual DbSet<EditHistory> EditHistories { get; set; }
+		
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
 
-			modelBuilder.Entity<ContentCategory>(entity =>
+			modelBuilder.Entity<CommunityCategory>(entity =>
 			{
-				entity.HasKey(cc => new { cc.ContentID, cc.CategoryID });
-
-				entity.HasOne(cc => cc.Content)
-						.WithMany(c => c.ContentCategories)
-						.HasForeignKey(cc => cc.ContentID);
-
+				entity.HasKey(cc => new { cc.CommunityId, cc.CategoryID }); // Composite key for many-to-many
+				entity.HasOne(cc => cc.Community)
+					  .WithMany(c => c.CommunityCategories)
+					  .HasForeignKey(cc => cc.CommunityId)
+					  .OnDelete(DeleteBehavior.Cascade);
 				entity.HasOne(cc => cc.Category)
-						.WithMany(c => c.ContentCategories)
-						.HasForeignKey(cc => cc.CategoryID);
+					  .WithMany(c => c.CommunityCategories)
+					  .HasForeignKey(cc => cc.CategoryID)
+					  .OnDelete(DeleteBehavior.Cascade);
+
 			});
 
 			modelBuilder.Entity<Category>(entity =>
@@ -48,102 +52,121 @@ namespace FandomHub.Infrastructure.Data
 					.HasMaxLength(100);
 				entity.Property(c => c.Slug)
 					.IsRequired()
-					.HasMaxLength(100);
+					.HasMaxLength(50);
 				entity.Property(c=>c.isActive)
 					.HasDefaultValue(true);
 				entity.HasIndex(c => c.Slug)
 					.IsUnique();
 			});
 
-			modelBuilder.Entity<ContentType>(entity =>
+			// Configuration for Character
+			modelBuilder.Entity<Character>(entity =>
 			{
-				entity.HasKey(ct=>ct.ContentTypeID);
-				entity.Property(ct => ct.Name)
+				entity.HasKey(c => c.CharacterId);
+
+				entity.Property(c => c.Name)
 					.IsRequired()
 					.HasMaxLength(100);
-				entity.Property(ct => ct.Slug)
-					.IsRequired()
-					.HasMaxLength(100);
-				entity.Property(ct => ct.Description)
-					.HasMaxLength(500);
-				entity.HasIndex(ct => ct.Slug)
-					.IsUnique();
-				entity.Property(ct=>ct.isActive)
-					.HasDefaultValue(true);
+				 
+				entity.Property(c => c.Avatar)
+					.HasMaxLength(255);
+
+				entity.HasOne(c => c.Community)
+					.WithMany(c => c.Characters)
+					.HasForeignKey(c => c.CommunityId)
+					.OnDelete(DeleteBehavior.SetNull); // Optional: Define delete behavior
+
+				// Add navigation property for CharacterAttributeGroups
+				entity.HasMany(c => c.CharacterAttributeGroups)
+					.WithOne(cag => cag.Character)
+					.HasForeignKey(cag => cag.CharacterId);
 			});
-			modelBuilder.Entity<Content>(entity =>
+
+			// Configuration for CharacterAttribute
+			modelBuilder.Entity<CharacterAttribute>(entity =>
 			{
-				entity.HasKey(c => c.ContentID);
+				entity.HasKey(ca => ca.CharacterAttributeId);
+
+				entity.Property(ca => ca.Key)
+					.IsRequired()
+					.HasMaxLength(100);
+
+				entity.Property(ca => ca.Value)
+					.HasMaxLength(255);
+
+				entity.HasOne(ca => ca.CharacterAttributeGroup)
+					.WithMany(cag => cag.CharacterAttributes)
+					.HasForeignKey(ca => ca.CharacterAttributeGroupId)
+					.OnDelete(DeleteBehavior.Cascade);  
+			});
+
+			// Configuration for CharacterAttributeGroup
+			modelBuilder.Entity<CharacterAttributeGroup>(entity =>
+			{
+				entity.HasKey(cag => cag.CharacterAttributeGroupId);
+
+				entity.Property(cag => cag.Name)
+					.IsRequired()
+					.HasMaxLength(100);
+
+				entity.HasOne(cag => cag.Character)
+					.WithMany(c => c.CharacterAttributeGroups)
+					.HasForeignKey(cag => cag.CharacterId)
+					.OnDelete(DeleteBehavior.Cascade); // Optional: Define delete behavior
+
+				entity.HasMany(cag => cag.CharacterAttributes)
+					.WithOne(ca => ca.CharacterAttributeGroup)
+					.HasForeignKey(ca => ca.CharacterAttributeGroupId);
+			});
+
+			modelBuilder.Entity<Community>(entity =>
+			{
+				entity.HasKey(c => c.CommunityId);
 
 				entity.Property(c => c.Title)
-					  .IsRequired()
-					  .HasMaxLength(200);
-				entity.Property(c=>c.SubTitle)
-					  .HasMaxLength(200);
+					.IsRequired()
+					.HasMaxLength(255);
 
-				entity.Property(c => c.Slug)
-					  .IsRequired()
-					  .HasMaxLength(200);
-
-				entity.HasIndex(c => c.Slug)
-					  .IsUnique();
-
-				entity.Property(c => c.Summary)
-					  .HasMaxLength(500);
-
-				entity.Property(c => c.ContentText)
-					  .IsRequired();
+				entity.Property(c => c.LogoImage)
+					.HasMaxLength(255);
 
 				entity.Property(c => c.CoverImage)
-					  .HasMaxLength(250);
+					.HasMaxLength(255);
 
-				entity.Property(c => c.CreatedById)
-					  .HasMaxLength(450);
+				entity.Property(c => c.Slug)
+					.HasMaxLength(100);
 
-				entity.Property(c => c.CreatedAt)
-					  .IsRequired();
+				entity.Property(c => c.ContentText)
+					.HasMaxLength(1000);
+
+				entity.Property(c => c.Summary)
+					.HasMaxLength(500);
 
 				entity.Property(c => c.isActive)
+					.HasDefaultValue(true); 
+
+				entity.HasMany(c => c.Characters)
+					.WithOne(c => c.Community)
+					.HasForeignKey(c => c.CommunityId)
+					.OnDelete(DeleteBehavior.SetNull); // Optional: Define delete behavior
+			});
+
+			// Configuration for EditHistory
+			modelBuilder.Entity<EditHistory>(entity =>
+			{
+				entity.HasKey(eh => eh.Id);
+
+				entity.Property(eh => eh.TargetEntityType)
+					.HasMaxLength(100); 
+
+				entity.Property(eh => eh.ChangeSummary)
+					.HasMaxLength(1000);
+
+				entity.Property(eh => eh.isActive)
 					.HasDefaultValue(true);
 
-				entity.HasOne(c => c.ContentType)
-					  .WithMany(ct => ct.Contents)
-					  .HasForeignKey(c => c.ContentTypeID);
-
-				entity.HasOne<ApplicationUser>()               // Không cần navigation property
-					  .WithMany()
-					  .HasForeignKey(c => c.CreatedById)
-					  .OnDelete(DeleteBehavior.Restrict);
-
 			});
-
-			modelBuilder.Entity<ContentEditHistory>(entity =>
-			{
-				entity.HasKey(e => e.HistoryID);
-
-				entity.Property(e => e.ChangeSummary)
-					  .HasMaxLength(250);
-
-				entity.Property(e => e.OldContent)
-					  .IsRequired();
-
-				entity.Property(e => e.EditedById)
-					  .HasMaxLength(450);
-				entity.Property(e=>e.isActive)
-					  .HasDefaultValue(true);
-
-				entity.Property(e => e.EditedAt)
-					  .IsRequired();
-
-				entity.HasOne(e => e.Content)
-					  .WithMany(c => c.EditHistories)
-					  .HasForeignKey(e => e.ContentID);
-
-				entity.HasOne<ApplicationUser>()
-					  .WithMany()
-					  .HasForeignKey(eh => eh.EditedById)
-					  .OnDelete(DeleteBehavior.SetNull);
-			});
+			 
 		}
 	}
 }

@@ -2,8 +2,7 @@ using FandomHub.Application.Common;
 using FandomHub.Application.Intefaces.Common;
 using FandomHub.Application.Intefaces.Repositories;
 using FandomHub.Application.Intefaces.Services;
-using FandomHub.Application.Intefaces.Services.Infrastructure;
-using FandomHub.Application.Services;
+using FandomHub.Application.Intefaces.Services.Infrastructure; 
 using FandomHub.Infrastructure.Data;
 using FandomHub.Infrastructure.Identity;
 using FandomHub.Infrastructure.Repositories;
@@ -108,15 +107,12 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 .AddDefaultTokenProviders();
 
 // Register repositories
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IContentRepository, ContentRepository>();
-builder.Services.AddScoped<IContentEditHistoryRepository, ContentEditHistoryRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();  
 builder.Services.AddScoped(typeof(IBaseRepo<,>), typeof(BaseRepo<,>));
 
 // Register service
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IContentService, ContentService>();
+builder.Services.AddScoped<IAuthService, AuthService>(); 
 builder.Services.AddScoped<ISlugHelper, SlugHelper>();
 
 
@@ -134,8 +130,7 @@ if (app.Environment.IsDevelopment())
 	var dbContext = scope.ServiceProvider.GetRequiredService<FandomHubDbContext>();
 
 	await ApplicationRoleSeeder.SeedRolesAsync(roleManager);
-	await ApplicationCategorySeeder.SeedCategoriesAsync(dbContext);
-	await ApplicationContentTypeSeeder.SeedContentTypesAsync(dbContext);
+	await ApplicationCategorySeeder.SeedCategoriesAsync(dbContext); 
 } 
 
 // Configure the HTTP request pipeline.

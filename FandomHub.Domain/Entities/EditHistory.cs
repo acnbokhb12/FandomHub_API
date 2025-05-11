@@ -8,18 +8,21 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Domain.Entities
 {
-	[Table("Category")]
-	public class Category
+	[Table("EditHistory")]
+	public class EditHistory : AuditableEntity
 	{
 		[Key]
-		public int CategoryID { get; set; }
+		public int Id { get; set; }	
 
-		public string? Name { get; set; }
+		public string? TargetEntityType { get; set; }
 
-		public string? Slug { get; set; }
+		public int TargetEntityId {  get; set; }
+
+		public string? PreviousContent { get; set; }
+
+		public string? ChangeSummary { get; set; }
 
 		public bool isActive { get; set; } = true;
 
-		public virtual ICollection<CommunityCategory> CommunityCategories { get; set; } = new List<CommunityCategory>();
 	}
 }
