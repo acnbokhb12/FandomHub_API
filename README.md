@@ -26,4 +26,4 @@ After configuring `appsettings.json`, run the following commands to apply migrat
 
 ```powershell
 1. Add-Migration InitialCreate
-2 .Update-Database
+2. Update-Database
