@@ -2,7 +2,8 @@ using FandomHub.Application.Common;
 using FandomHub.Application.Intefaces.Common;
 using FandomHub.Application.Intefaces.Repositories;
 using FandomHub.Application.Intefaces.Services;
-using FandomHub.Application.Intefaces.Services.Infrastructure; 
+using FandomHub.Application.Intefaces.Services.Infrastructure;
+using FandomHub.Application.Services;
 using FandomHub.Infrastructure.Data;
 using FandomHub.Infrastructure.Identity;
 using FandomHub.Infrastructure.Repositories;
@@ -107,13 +108,18 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 .AddDefaultTokenProviders();
 
 // Register repositories
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();  
 builder.Services.AddScoped(typeof(IBaseRepo<,>), typeof(BaseRepo<,>));
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();  
+builder.Services.AddScoped<ICommunityRepository, CommunityRepository>();
+
 
 // Register service
+builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>(); 
 builder.Services.AddScoped<ISlugHelper, SlugHelper>();
+builder.Services.AddScoped<ICommunityService, CommunityService>();
+
 
 
 

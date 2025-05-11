@@ -1,21 +1,19 @@
 ﻿using FandomHub.Domain.Entities;
 using FandomHub.Infrastructure.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace FandomHub.Infrastructure.Data
 {
 	public class FandomHubDbContext : IdentityDbContext<ApplicationUser>
 	{
-		public FandomHubDbContext(DbContextOptions<FandomHubDbContext> options) : base(options)
-		{
-		}
-		 
 		public virtual DbSet<Category> Categories { get; set; }
 		public virtual DbSet<Character> Characters { get; set; }
 		public virtual DbSet<CharacterAttribute> CharacterAttributes { get; set; }
@@ -23,7 +21,14 @@ namespace FandomHub.Infrastructure.Data
 		public virtual DbSet<Community> Communities { get; set; }
 		public virtual DbSet<CommunityCategory> CommunityCategories { get; set; } 
 		public virtual DbSet<EditHistory> EditHistories { get; set; }
-		
+		public virtual DbSet<AuditLog> AuditLogs { get; set; }
+		private readonly string _currentUser;
+
+		public FandomHubDbContext(DbContextOptions<FandomHubDbContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
+		{
+			_currentUser = httpContextAccessor?.HttpContext?.User?.Identity?.Name ?? "System";
+		}
+		 
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -134,7 +139,7 @@ namespace FandomHub.Infrastructure.Data
 					.HasMaxLength(255);
 
 				entity.Property(c => c.Slug)
-					.HasMaxLength(100);
+					.HasMaxLength(50);
 
 				entity.Property(c => c.ContentText)
 					.HasMaxLength(1000);
@@ -168,5 +173,66 @@ namespace FandomHub.Infrastructure.Data
 			});
 			 
 		}
+
+		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+		{
+			// Lấy các thay đổi đang theo dõi
+			var modifiedEntries = ChangeTracker.Entries()
+				.Where(e => e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted)
+				.ToList();
+
+			var auditLogs = new List<AuditLog>();
+
+			foreach (var entry in modifiedEntries)
+			{
+				var audit = new AuditLog
+				{
+					EntityName = entry.Entity.GetType().Name,
+					PerformedBy = _currentUser,
+					PerformedAt = DateTime.UtcNow,
+					Action = entry.State.ToString()
+				};
+
+				if (entry.State == EntityState.Modified)
+				{
+					var original = new Dictionary<string, object>();
+					var current = new Dictionary<string, object>();
+
+					foreach (var prop in entry.OriginalValues.Properties)
+					{
+						var originalValue = entry.OriginalValues[prop]?.ToString();
+						var currentValue = entry.CurrentValues[prop]?.ToString();
+
+						if (originalValue != currentValue)
+						{
+							original[prop.Name] = originalValue;
+							current[prop.Name] = currentValue;
+						}
+					}
+
+					audit.OriginalValue = JsonSerializer.Serialize(original);
+					audit.NewValue = JsonSerializer.Serialize(current);
+				}
+				else if (entry.State == EntityState.Added)
+				{
+					audit.NewValue = JsonSerializer.Serialize(entry.CurrentValues.ToObject());
+				}
+				else if (entry.State == EntityState.Deleted)
+				{
+					audit.OriginalValue = JsonSerializer.Serialize(entry.OriginalValues.ToObject());
+				}
+
+				auditLogs.Add(audit);
+			}
+
+			// Thêm audit logs vào DbSet nếu có
+			if (auditLogs.Any())
+			{
+				AuditLogs.AddRange(auditLogs);
+			}
+
+			return await base.SaveChangesAsync(cancellationToken);
+		}
+
 	}
 }

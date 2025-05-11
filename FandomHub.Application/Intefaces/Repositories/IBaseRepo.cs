@@ -13,5 +13,7 @@ namespace FandomHub.Application.Intefaces.Repositories
 		Task<bool> Delete(Tkey id);
 		Task<bool> UpdateAsync(Tkey id, T entity);
 		Task<T?> UpdateTAsync(Tkey id, T entity);
+		Task<IEnumerable<T>> GetAllAsync();
+
 	}
 }

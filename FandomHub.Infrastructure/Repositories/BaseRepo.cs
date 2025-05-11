@@ -1,5 +1,6 @@
 ﻿using FandomHub.Application.Intefaces.Repositories;
 using FandomHub.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,11 @@ namespace FandomHub.Infrastructure.Repositories
 			if (entity == null) return false;
 			await _context.SaveChangesAsync();
 			return true;
+		}
+
+		public async Task<IEnumerable<T>> GetAllAsync()
+		{
+			return await _context.Set<T>().ToListAsync();
 		}
 
 		public async Task<T?> GetByIdAsync(Tkey id)
