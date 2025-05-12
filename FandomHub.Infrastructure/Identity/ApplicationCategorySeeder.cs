@@ -15,14 +15,14 @@ namespace FandomHub.Infrastructure.Identity
 		{
 			var categories = new List<Category>
 		{
-			new Category { Name = "TV", Slug = "tv", isActive = true },
-			new Category { Name = "Video Games", Slug = "video_games", isActive = true },
-			new Category { Name = "Anime", Slug = "anime", isActive = true },
-			new Category { Name = "Movies", Slug = "movies", isActive = true },
-			new Category { Name = "Fanon", Slug = "fanon", isActive = true },
-			new Category { Name = "Books", Slug = "books", isActive = true },
-			new Category { Name = "Comics", Slug = "comics", isActive = true },
-			new Category { Name = "Music", Slug = "music", isActive = true },
+			new Category { Name = "TV", Slug = "tv", IsActive = true },
+			new Category { Name = "Video Games", Slug = "video_games", IsActive = true },
+			new Category { Name = "Anime", Slug = "anime", IsActive = true },
+			new Category { Name = "Movies", Slug = "movies", IsActive = true },
+			new Category { Name = "Fanon", Slug = "fanon", IsActive = true },
+			new Category { Name = "Books", Slug = "books", IsActive = true },
+			new Category { Name = "Comics", Slug = "comics", IsActive = true },
+			new Category { Name = "Music", Slug = "music", IsActive = true },
 
 		};
 

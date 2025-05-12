@@ -4,6 +4,7 @@ using FandomHub.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FandomHub.Infrastructure.Migrations
 {
     [DbContext(typeof(FandomHubDbContext))]
-    partial class FandomHubDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250511222813_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,13 +110,13 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeleteAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeleteBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("HubId")
                         .HasColumnType("int");
@@ -147,19 +150,13 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CommunityId");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeleteBy");
 
                     b.HasIndex("HubId");
 
                     b.HasIndex("LanguagesId");
-
-                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("Community");
                 });
@@ -195,13 +192,13 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeleteAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeleteBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -222,15 +219,9 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeleteBy");
-
-                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("EditHistory");
                 });
@@ -323,13 +314,13 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeleteAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeleteBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -347,20 +338,14 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PageId");
 
                     b.HasIndex("CommunityId");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeleteBy");
-
                     b.HasIndex("Slug")
                         .IsUnique();
-
-                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("Page");
                 });
@@ -571,16 +556,6 @@ namespace FandomHub.Infrastructure.Migrations
 
             modelBuilder.Entity("FandomHub.Domain.Entities.Community", b =>
                 {
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("DeleteBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("FandomHub.Domain.Entities.Hub", "Hub")
                         .WithMany()
                         .HasForeignKey("HubId")
@@ -592,11 +567,6 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasForeignKey("LanguagesId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UpdatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Hub");
 
@@ -620,24 +590,6 @@ namespace FandomHub.Infrastructure.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Community");
-                });
-
-            modelBuilder.Entity("FandomHub.Domain.Entities.EditHistory", b =>
-                {
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("DeleteBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UpdatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("FandomHub.Domain.Entities.HubCategory", b =>
@@ -666,21 +618,6 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasForeignKey("CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("DeleteBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UpdatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Community");
                 });

@@ -14,10 +14,7 @@ namespace FandomHub.Infrastructure.Data
 {
 	public class FandomHubDbContext : IdentityDbContext<ApplicationUser>
 	{
-		public virtual DbSet<Category> Categories { get; set; }
-		public virtual DbSet<Character> Characters { get; set; }
-		public virtual DbSet<CharacterAttribute> CharacterAttributes { get; set; }
-		public virtual DbSet<CharacterAttributeGroup> CharacterAttributesGroup { get; set; }
+		public virtual DbSet<Category> Categories { get; set; } 
 		public virtual DbSet<Community> Communities { get; set; }
 		public virtual DbSet<CommunityCategory> CommunityCategories { get; set; } 
 		public virtual DbSet<EditHistory> EditHistories { get; set; }
@@ -34,9 +31,10 @@ namespace FandomHub.Infrastructure.Data
 		{
 			base.OnModelCreating(modelBuilder);
 
+			// COMMUNITY - CATEGORY (many-to-many)
 			modelBuilder.Entity<CommunityCategory>(entity =>
 			{
-				entity.HasKey(cc => new { cc.CommunityId, cc.CategoryID }); // Composite key for many-to-many
+				entity.HasKey(cc => new { cc.CommunityId, cc.CategoryID });  
 				entity.HasOne(cc => cc.Community)
 					  .WithMany(c => c.CommunityCategories)
 					  .HasForeignKey(cc => cc.CommunityId)
@@ -48,6 +46,23 @@ namespace FandomHub.Infrastructure.Data
 
 			});
 
+			// HUB - CATEGORY (many-to-many)
+			modelBuilder.Entity<HubCategory>(entity =>
+			{
+				entity.HasKey(hc => new { hc.HubId, hc.CategoryID });
+
+				entity.HasOne(hc => hc.Hub)
+					  .WithMany(h => h.HubCategories)
+					  .HasForeignKey(hc => hc.HubId)
+					  .OnDelete(DeleteBehavior.Cascade);
+
+				entity.HasOne(hc => hc.Category)
+					  .WithMany()
+					  .HasForeignKey(hc => hc.CategoryID)
+					  .OnDelete(DeleteBehavior.Cascade);
+			});
+
+			// CATEGORY
 			modelBuilder.Entity<Category>(entity =>
 			{
 				entity.HasKey(c => c.CategoryID);
@@ -58,72 +73,15 @@ namespace FandomHub.Infrastructure.Data
 				entity.Property(c => c.Slug)
 					.IsRequired()
 					.HasMaxLength(50);
-				entity.Property(c=>c.isActive)
+				entity.Property(c=>c.IsActive)
 					.HasDefaultValue(true);
 				entity.HasIndex(c => c.Slug)
 					.IsUnique();
+				entity.Property(c => c.IsActive)
+					.HasDefaultValue(true);
 			});
 
-			// Configuration for Character
-			modelBuilder.Entity<Character>(entity =>
-			{
-				entity.HasKey(c => c.CharacterId);
-
-				entity.Property(c => c.Name)
-					.IsRequired()
-					.HasMaxLength(100);
-				 
-				entity.Property(c => c.Avatar)
-					.HasMaxLength(255);
-
-				entity.HasOne(c => c.Community)
-					.WithMany(c => c.Characters)
-					.HasForeignKey(c => c.CommunityId)
-					.OnDelete(DeleteBehavior.SetNull); // Optional: Define delete behavior
-
-				// Add navigation property for CharacterAttributeGroups
-				entity.HasMany(c => c.CharacterAttributeGroups)
-					.WithOne(cag => cag.Character)
-					.HasForeignKey(cag => cag.CharacterId);
-			});
-
-			// Configuration for CharacterAttribute
-			modelBuilder.Entity<CharacterAttribute>(entity =>
-			{
-				entity.HasKey(ca => ca.CharacterAttributeId);
-
-				entity.Property(ca => ca.Key)
-					.IsRequired()
-					.HasMaxLength(100);
-
-				entity.Property(ca => ca.Value)
-					.HasMaxLength(255);
-
-				entity.HasOne(ca => ca.CharacterAttributeGroup)
-					.WithMany(cag => cag.CharacterAttributes)
-					.HasForeignKey(ca => ca.CharacterAttributeGroupId)
-					.OnDelete(DeleteBehavior.Cascade);  
-			});
-
-			// Configuration for CharacterAttributeGroup
-			modelBuilder.Entity<CharacterAttributeGroup>(entity =>
-			{
-				entity.HasKey(cag => cag.CharacterAttributeGroupId);
-
-				entity.Property(cag => cag.Name)
-					.IsRequired()
-					.HasMaxLength(100);
-
-				entity.HasOne(cag => cag.Character)
-					.WithMany(c => c.CharacterAttributeGroups)
-					.HasForeignKey(cag => cag.CharacterId)
-					.OnDelete(DeleteBehavior.Cascade); // Optional: Define delete behavior
-
-				entity.HasMany(cag => cag.CharacterAttributes)
-					.WithOne(ca => ca.CharacterAttributeGroup)
-					.HasForeignKey(ca => ca.CharacterAttributeGroupId);
-			});
-
+			// COMMUNITY
 			modelBuilder.Entity<Community>(entity =>
 			{
 				entity.HasKey(c => c.CommunityId);
@@ -147,13 +105,96 @@ namespace FandomHub.Infrastructure.Data
 				entity.Property(c => c.Summary)
 					.HasMaxLength(500);
 
-				entity.Property(c => c.isActive)
-					.HasDefaultValue(true); 
+				entity.Property(c => c.IsActive)
+					.HasDefaultValue(true);
 
-				entity.HasMany(c => c.Characters)
-					.WithOne(c => c.Community)
-					.HasForeignKey(c => c.CommunityId)
-					.OnDelete(DeleteBehavior.SetNull); // Optional: Define delete behavior
+				entity.HasOne(c => c.Hub)
+					.WithMany()
+					.HasForeignKey(c => c.HubId)
+					.OnDelete(DeleteBehavior.Restrict);
+
+				entity.HasOne(c => c.Languages)
+					.WithMany()
+					.HasForeignKey(c => c.LanguagesId)
+					.OnDelete(DeleteBehavior.Restrict);
+
+				entity.HasOne<ApplicationUser>()
+					.WithMany()
+					.HasForeignKey("CreatedBy")
+					.OnDelete(DeleteBehavior.Restrict);
+				entity.HasOne<ApplicationUser>()
+					.WithMany()
+					.HasForeignKey("UpdatedBy")
+					.OnDelete(DeleteBehavior.Restrict);
+				entity.HasOne<ApplicationUser>()
+					.WithMany()
+					.HasForeignKey("DeleteBy")
+					.OnDelete(DeleteBehavior.Restrict);
+			});
+
+			// PAGE
+			modelBuilder.Entity<Page>(entity =>
+			{
+				entity.HasKey(p => p.PageId);
+
+				entity.Property(p => p.Title)
+					  .HasMaxLength(200);
+
+				entity.Property(p => p.Slug)
+					  .IsRequired()
+					  .HasMaxLength(100);
+
+				entity.HasIndex(p => p.Slug)
+					  .IsUnique();
+
+				entity.HasOne(p => p.Community)
+					  .WithMany(c => c.Pages)
+					  .HasForeignKey(p => p.CommunityId)
+					  .OnDelete(DeleteBehavior.Cascade);
+
+				entity.HasOne<ApplicationUser>()
+					.WithMany()
+					.HasForeignKey("CreatedBy")
+					.OnDelete(DeleteBehavior.Restrict);
+				entity.HasOne<ApplicationUser>()
+					.WithMany()
+					.HasForeignKey("UpdatedBy")
+					.OnDelete(DeleteBehavior.Restrict);
+				entity.HasOne<ApplicationUser>()
+					.WithMany()
+					.HasForeignKey("DeleteBy")
+					.OnDelete(DeleteBehavior.Restrict);
+			});
+
+			// LANGUAGES
+			modelBuilder.Entity<Languages>(entity =>
+			{
+				entity.HasKey(l => l.LanguagesId);
+
+				entity.Property(l => l.LanguageCode)
+					  .IsRequired()
+					  .HasMaxLength(10);
+
+				entity.Property(l => l.LanguageName)
+					  .IsRequired()
+					  .HasMaxLength(100);
+
+				entity.Property(l => l.IsActive)
+					  .HasDefaultValue(true);
+			});
+
+			// HUB
+			modelBuilder.Entity<Hub>(entity =>
+			{
+				entity.HasKey(h => h.HubId);
+
+				entity.Property(h => h.Name)
+					  .IsRequired()
+					  .HasMaxLength(100);
+				entity.Property(c => c.Slug)
+					.HasMaxLength(50);
+				entity.Property(l => l.IsActive)
+					  .HasDefaultValue(true);
 			});
 
 			// Configuration for EditHistory
@@ -167,9 +208,21 @@ namespace FandomHub.Infrastructure.Data
 				entity.Property(eh => eh.ChangeSummary)
 					.HasMaxLength(1000);
 
-				entity.Property(eh => eh.isActive)
+				entity.Property(eh => eh.IsActive)
 					.HasDefaultValue(true);
 
+				entity.HasOne<ApplicationUser>() 
+					.WithMany()                   
+					.HasForeignKey("CreatedBy")    
+					.OnDelete(DeleteBehavior.Restrict);
+				entity.HasOne<ApplicationUser>()
+					.WithMany()
+					.HasForeignKey("UpdatedBy")
+					.OnDelete(DeleteBehavior.Restrict);
+				entity.HasOne<ApplicationUser>()
+					.WithMany()
+					.HasForeignKey("DeleteBy")
+					.OnDelete(DeleteBehavior.Restrict);
 			});
 			 
 		}

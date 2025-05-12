@@ -8,22 +8,15 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Domain.Entities
 {
-	[Table("EditHistory")]
-	public class EditHistory : AuditableEntity
+	[Table("Hub")]
+	public class Hub
 	{
 		[Key]
-		public int Id { get; set; }	
-
-		public string? TargetEntityType { get; set; }
-
-		public int TargetEntityId {  get; set; }
-
-		public string? PreviousContent { get; set; }
-
-		public string? ChangeSummary { get; set; }
-
+		public int HubId { get; set; }
+		public string Name { get; set; } = string.Empty;
+		public string? Slug { get; set; }
 		public bool IsActive { get; set; } = true;
 
-
+		public virtual ICollection<HubCategory> HubCategories { get; set; } = new List<HubCategory>();
 	}
 }

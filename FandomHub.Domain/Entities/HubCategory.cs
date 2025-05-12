@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Domain.Entities
 {
-	[Table("CommunityCategory")]
-	public class CommunityCategory
-	{ 
-		public int CommunityId { get; set; }
-		public Community Community { get; set; } = null!;
+	[Table("HubCategory")]
+	public class HubCategory
+	{
+		public int HubId { get; set; }
+		public Hub Hub { get; set; } = null!;
 
 		public int CategoryID { get; set; }
 		public Category Category { get; set; } = null!;

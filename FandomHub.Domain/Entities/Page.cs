@@ -8,22 +8,22 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Domain.Entities
 {
-	[Table("EditHistory")]
-	public class EditHistory : AuditableEntity
+	[Table("Page")]
+	public class Page :AuditableEntity
 	{
-		[Key]
-		public int Id { get; set; }	
+		[Key] 
+		public int PageId { get; set; }
 
-		public string? TargetEntityType { get; set; }
+		public string? Title { get; set; }
 
-		public int TargetEntityId {  get; set; }
+		public string? Content { get; set; }
 
-		public string? PreviousContent { get; set; }
+		public string Slug { get; set; } = null!;
 
-		public string? ChangeSummary { get; set; }
+		public int CommunityId { get; set; }
 
 		public bool IsActive { get; set; } = true;
 
-
+		public Community Community { get; set; } = null!;
 	}
 }

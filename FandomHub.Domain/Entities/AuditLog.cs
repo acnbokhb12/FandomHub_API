@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace FandomHub.Domain.Entities
 {
-    public class AuditLog
+	[Table("AuditLog")]
+	public class AuditLog
     {
 		public int Id { get; set; }
 		public string? Action { get; set; } // Create, Update, Delete

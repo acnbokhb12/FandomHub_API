@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FandomHub.Infrastructure.Migrations
 {
     [DbContext(typeof(FandomHubDbContext))]
-    [Migration("20250511055657_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250512060858_UpdatePageCommunity")]
+    partial class UpdatePageCommunity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,40 @@ namespace FandomHub.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("FandomHub.Domain.Entities.AuditLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EntityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NewValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OriginalValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PerformedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PerformedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditLog");
+                });
+
             modelBuilder.Entity("FandomHub.Domain.Entities.Category", b =>
                 {
                     b.Property<int>("CategoryID")
@@ -32,6 +66,11 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryID"));
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -43,154 +82,12 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<bool>("isActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
                     b.HasKey("CategoryID");
 
                     b.HasIndex("Slug")
                         .IsUnique();
 
                     b.ToTable("Category");
-                });
-
-            modelBuilder.Entity("FandomHub.Domain.Entities.Character", b =>
-                {
-                    b.Property<int>("CharacterId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CharacterId"));
-
-                    b.Property<string>("Avatar")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CommunityId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeleteAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeleteBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("bit");
-
-                    b.HasKey("CharacterId");
-
-                    b.HasIndex("CommunityId");
-
-                    b.ToTable("Character");
-                });
-
-            modelBuilder.Entity("FandomHub.Domain.Entities.CharacterAttribute", b =>
-                {
-                    b.Property<int>("CharacterAttributeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CharacterAttributeId"));
-
-                    b.Property<int>("CharacterAttributeGroupId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeleteAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeleteBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("CharacterAttributeId");
-
-                    b.HasIndex("CharacterAttributeGroupId");
-
-                    b.ToTable("CharacterAttribute");
-                });
-
-            modelBuilder.Entity("FandomHub.Domain.Entities.CharacterAttributeGroup", b =>
-                {
-                    b.Property<int>("CharacterAttributeGroupId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CharacterAttributeGroupId"));
-
-                    b.Property<int>("CharacterId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeleteAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeleteBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CharacterAttributeGroupId");
-
-                    b.HasIndex("CharacterId");
-
-                    b.ToTable("CharacterAttributeGroup");
                 });
 
             modelBuilder.Entity("FandomHub.Domain.Entities.Community", b =>
@@ -209,25 +106,36 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("DeleteAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeleteBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("HubId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<int>("LanguagesId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LogoImage")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Slug")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Summary")
                         .HasMaxLength(500)
@@ -242,14 +150,19 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("isActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CommunityId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("DeleteBy");
+
+                    b.HasIndex("HubId");
+
+                    b.HasIndex("LanguagesId");
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("Community");
                 });
@@ -281,17 +194,22 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("DeleteAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeleteBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("PreviousContent")
                         .HasColumnType("nvarchar(max)");
@@ -307,16 +225,147 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("isActive")
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("DeleteBy");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.ToTable("EditHistory");
+                });
+
+            modelBuilder.Entity("FandomHub.Domain.Entities.Hub", b =>
+                {
+                    b.Property<int>("HubId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HubId"));
+
+                    b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.HasKey("Id");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.ToTable("EditHistory");
+                    b.Property<string>("Slug")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("HubId");
+
+                    b.ToTable("Hub");
+                });
+
+            modelBuilder.Entity("FandomHub.Domain.Entities.HubCategory", b =>
+                {
+                    b.Property<int>("HubId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("int");
+
+                    b.HasKey("HubId", "CategoryID");
+
+                    b.HasIndex("CategoryID");
+
+                    b.ToTable("HubCategory");
+                });
+
+            modelBuilder.Entity("FandomHub.Domain.Entities.Languages", b =>
+                {
+                    b.Property<int>("LanguagesId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LanguagesId"));
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("LanguageCode")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("LanguageName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("LanguagesId");
+
+                    b.ToTable("Languages");
+                });
+
+            modelBuilder.Entity("FandomHub.Domain.Entities.Page", b =>
+                {
+                    b.Property<int>("PageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PageId"));
+
+                    b.Property<int>("CommunityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DeleteAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeleteBy")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("PageId");
+
+                    b.HasIndex("CommunityId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("DeleteBy");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.ToTable("Page");
                 });
 
             modelBuilder.Entity("FandomHub.Infrastructure.Identity.ApplicationUser", b =>
@@ -523,36 +572,38 @@ namespace FandomHub.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("FandomHub.Domain.Entities.Character", b =>
+            modelBuilder.Entity("FandomHub.Domain.Entities.Community", b =>
                 {
-                    b.HasOne("FandomHub.Domain.Entities.Community", "Community")
-                        .WithMany("Characters")
-                        .HasForeignKey("CommunityId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Community");
-                });
+                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("DeleteBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity("FandomHub.Domain.Entities.CharacterAttribute", b =>
-                {
-                    b.HasOne("FandomHub.Domain.Entities.CharacterAttributeGroup", "CharacterAttributeGroup")
-                        .WithMany("CharacterAttributes")
-                        .HasForeignKey("CharacterAttributeGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("FandomHub.Domain.Entities.Hub", "Hub")
+                        .WithMany()
+                        .HasForeignKey("HubId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CharacterAttributeGroup");
-                });
-
-            modelBuilder.Entity("FandomHub.Domain.Entities.CharacterAttributeGroup", b =>
-                {
-                    b.HasOne("FandomHub.Domain.Entities.Character", "Character")
-                        .WithMany("CharacterAttributeGroups")
-                        .HasForeignKey("CharacterId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("FandomHub.Domain.Entities.Languages", "Languages")
+                        .WithMany()
+                        .HasForeignKey("LanguagesId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Character");
+                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Hub");
+
+                    b.Navigation("Languages");
                 });
 
             modelBuilder.Entity("FandomHub.Domain.Entities.CommunityCategory", b =>
@@ -570,6 +621,69 @@ namespace FandomHub.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+
+                    b.Navigation("Community");
+                });
+
+            modelBuilder.Entity("FandomHub.Domain.Entities.EditHistory", b =>
+                {
+                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("DeleteBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("FandomHub.Domain.Entities.HubCategory", b =>
+                {
+                    b.HasOne("FandomHub.Domain.Entities.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FandomHub.Domain.Entities.Hub", "Hub")
+                        .WithMany("HubCategories")
+                        .HasForeignKey("HubId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Hub");
+                });
+
+            modelBuilder.Entity("FandomHub.Domain.Entities.Page", b =>
+                {
+                    b.HasOne("FandomHub.Domain.Entities.Community", "Community")
+                        .WithMany("Pages")
+                        .HasForeignKey("CommunityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("DeleteBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Community");
                 });
@@ -630,21 +744,16 @@ namespace FandomHub.Infrastructure.Migrations
                     b.Navigation("CommunityCategories");
                 });
 
-            modelBuilder.Entity("FandomHub.Domain.Entities.Character", b =>
-                {
-                    b.Navigation("CharacterAttributeGroups");
-                });
-
-            modelBuilder.Entity("FandomHub.Domain.Entities.CharacterAttributeGroup", b =>
-                {
-                    b.Navigation("CharacterAttributes");
-                });
-
             modelBuilder.Entity("FandomHub.Domain.Entities.Community", b =>
                 {
-                    b.Navigation("Characters");
-
                     b.Navigation("CommunityCategories");
+
+                    b.Navigation("Pages");
+                });
+
+            modelBuilder.Entity("FandomHub.Domain.Entities.Hub", b =>
+                {
+                    b.Navigation("HubCategories");
                 });
 #pragma warning restore 612, 618
         }

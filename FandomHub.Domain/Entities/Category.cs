@@ -18,7 +18,7 @@ namespace FandomHub.Domain.Entities
 
 		public string? Slug { get; set; }
 
-		public bool isActive { get; set; } = true;
+		public bool IsActive { get; set; } = true;
 
 		public virtual ICollection<CommunityCategory> CommunityCategories { get; set; } = new List<CommunityCategory>();
 	}

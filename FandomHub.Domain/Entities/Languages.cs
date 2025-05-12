@@ -8,22 +8,20 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Domain.Entities
 {
-	[Table("EditHistory")]
-	public class EditHistory : AuditableEntity
+	[Table("Languages")]
+	public class Languages
 	{
 		[Key]
-		public int Id { get; set; }	
+		public int LanguagesId { get; set; }
 
-		public string? TargetEntityType { get; set; }
+		[MaxLength(10)]
+		public string LanguageCode { get; set; } = null!;
 
-		public int TargetEntityId {  get; set; }
-
-		public string? PreviousContent { get; set; }
-
-		public string? ChangeSummary { get; set; }
+		[Required]
+		[MaxLength(100)]
+		public string LanguageName { get; set; } = null!;
 
 		public bool IsActive { get; set; } = true;
-
 
 	}
 }

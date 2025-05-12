@@ -16,5 +16,7 @@ namespace FandomHub.Domain.Entities
 
 		public string? DeleteBy { get; set; }
 		public DateTime? DeleteAt { get; set; }
+		 
+
 	}
 }

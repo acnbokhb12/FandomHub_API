@@ -26,9 +26,17 @@ namespace FandomHub.Domain.Entities
 
 		public string? Summary { get; set; }
 
-		public bool isActive { get; set; } = true;
+		public bool IsActive { get; set; } = true;
 
-		public virtual ICollection<Character> Characters { get; set; } = new List<Character>();
+		public int LanguagesId { get; set; }
+
+		public int HubId { get; set; }
+
+		public Languages Languages { get; set; } = null!;
+
+		public Hub Hub { get; set; } = null!;
+
+		public virtual ICollection<Page> Pages { get; set; } = new List<Page>();
 
 		public virtual ICollection<CommunityCategory> CommunityCategories { get; set; } = new List<CommunityCategory>();
 	}

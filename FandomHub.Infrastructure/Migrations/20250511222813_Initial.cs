@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FandomHub.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,6 +53,25 @@ namespace FandomHub.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AuditLog",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Action = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EntityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EntityId = table.Column<int>(type: "int", nullable: true),
+                    OriginalValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NewValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PerformedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PerformedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuditLog", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Category",
                 columns: table => new
                 {
@@ -60,36 +79,11 @@ namespace FandomHub.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Slug = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    isActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Category", x => x.CategoryID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Community",
-                columns: table => new
-                {
-                    CommunityId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    LogoImage = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    CoverImage = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Slug = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    ContentText = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    Summary = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    isActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeleteBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DeleteAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Community", x => x.CommunityId);
                 });
 
             migrationBuilder.CreateTable(
@@ -102,9 +96,9 @@ namespace FandomHub.Infrastructure.Migrations
                     TargetEntityId = table.Column<int>(type: "int", nullable: false),
                     PreviousContent = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ChangeSummary = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    isActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeleteBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -113,6 +107,36 @@ namespace FandomHub.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EditHistory", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Hub",
+                columns: table => new
+                {
+                    HubId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Slug = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Hub", x => x.HubId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Languages",
+                columns: table => new
+                {
+                    LanguagesId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LanguageCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    LanguageName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Languages", x => x.LanguagesId);
                 });
 
             migrationBuilder.CreateTable(
@@ -222,18 +246,46 @@ namespace FandomHub.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Character",
+                name: "HubCategory",
                 columns: table => new
                 {
-                    CharacterId = table.Column<int>(type: "int", nullable: false)
+                    HubId = table.Column<int>(type: "int", nullable: false),
+                    CategoryID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HubCategory", x => new { x.HubId, x.CategoryID });
+                    table.ForeignKey(
+                        name: "FK_HubCategory_Category_CategoryID",
+                        column: x => x.CategoryID,
+                        principalTable: "Category",
+                        principalColumn: "CategoryID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_HubCategory_Hub_HubId",
+                        column: x => x.HubId,
+                        principalTable: "Hub",
+                        principalColumn: "HubId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Community",
+                columns: table => new
+                {
+                    CommunityId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CommunityId = table.Column<int>(type: "int", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Avatar = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    isActive = table.Column<bool>(type: "bit", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    LogoImage = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    CoverImage = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Slug = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    ContentText = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    Summary = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    LanguagesId = table.Column<int>(type: "int", nullable: false),
+                    HubId = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeleteBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -241,13 +293,19 @@ namespace FandomHub.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Character", x => x.CharacterId);
+                    table.PrimaryKey("PK_Community", x => x.CommunityId);
                     table.ForeignKey(
-                        name: "FK_Character_Community_CommunityId",
-                        column: x => x.CommunityId,
-                        principalTable: "Community",
-                        principalColumn: "CommunityId",
-                        onDelete: ReferentialAction.SetNull);
+                        name: "FK_Community_Hub_HubId",
+                        column: x => x.HubId,
+                        principalTable: "Hub",
+                        principalColumn: "HubId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Community_Languages_LanguagesId",
+                        column: x => x.LanguagesId,
+                        principalTable: "Languages",
+                        principalColumn: "LanguagesId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -275,15 +333,18 @@ namespace FandomHub.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CharacterAttributeGroup",
+                name: "Page",
                 columns: table => new
                 {
-                    CharacterAttributeGroupId = table.Column<int>(type: "int", nullable: false)
+                    PageId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CharacterId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Slug = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CommunityId = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeleteBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -291,39 +352,12 @@ namespace FandomHub.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CharacterAttributeGroup", x => x.CharacterAttributeGroupId);
+                    table.PrimaryKey("PK_Page", x => x.PageId);
                     table.ForeignKey(
-                        name: "FK_CharacterAttributeGroup_Character_CharacterId",
-                        column: x => x.CharacterId,
-                        principalTable: "Character",
-                        principalColumn: "CharacterId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CharacterAttribute",
-                columns: table => new
-                {
-                    CharacterAttributeId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CharacterAttributeGroupId = table.Column<int>(type: "int", nullable: false),
-                    Key = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeleteBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DeleteAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CharacterAttribute", x => x.CharacterAttributeId);
-                    table.ForeignKey(
-                        name: "FK_CharacterAttribute_CharacterAttributeGroup_CharacterAttributeGroupId",
-                        column: x => x.CharacterAttributeGroupId,
-                        principalTable: "CharacterAttributeGroup",
-                        principalColumn: "CharacterAttributeGroupId",
+                        name: "FK_Page_Community_CommunityId",
+                        column: x => x.CommunityId,
+                        principalTable: "Community",
+                        principalColumn: "CommunityId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -373,24 +407,35 @@ namespace FandomHub.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Character_CommunityId",
-                table: "Character",
-                column: "CommunityId");
+                name: "IX_Community_HubId",
+                table: "Community",
+                column: "HubId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CharacterAttribute_CharacterAttributeGroupId",
-                table: "CharacterAttribute",
-                column: "CharacterAttributeGroupId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CharacterAttributeGroup_CharacterId",
-                table: "CharacterAttributeGroup",
-                column: "CharacterId");
+                name: "IX_Community_LanguagesId",
+                table: "Community",
+                column: "LanguagesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CommunityCategory_CategoryID",
                 table: "CommunityCategory",
                 column: "CategoryID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HubCategory_CategoryID",
+                table: "HubCategory",
+                column: "CategoryID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Page_CommunityId",
+                table: "Page",
+                column: "CommunityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Page_Slug",
+                table: "Page",
+                column: "Slug",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -412,7 +457,7 @@ namespace FandomHub.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CharacterAttribute");
+                name: "AuditLog");
 
             migrationBuilder.DropTable(
                 name: "CommunityCategory");
@@ -421,22 +466,28 @@ namespace FandomHub.Infrastructure.Migrations
                 name: "EditHistory");
 
             migrationBuilder.DropTable(
+                name: "HubCategory");
+
+            migrationBuilder.DropTable(
+                name: "Page");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "CharacterAttributeGroup");
-
-            migrationBuilder.DropTable(
                 name: "Category");
 
             migrationBuilder.DropTable(
-                name: "Character");
+                name: "Community");
 
             migrationBuilder.DropTable(
-                name: "Community");
+                name: "Hub");
+
+            migrationBuilder.DropTable(
+                name: "Languages");
         }
     }
 }
