@@ -111,7 +111,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 builder.Services.AddScoped(typeof(IBaseRepo<,>), typeof(BaseRepo<,>));
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();  
 builder.Services.AddScoped<ICommunityRepository, CommunityRepository>();
-
+builder.Services.AddScoped<IEditHistoryRepository, EditHistoryRepository>();
 
 // Register service
 builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
@@ -119,6 +119,8 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>(); 
 builder.Services.AddScoped<ISlugHelper, SlugHelper>();
 builder.Services.AddScoped<ICommunityService, CommunityService>();
+builder.Services.AddScoped<IEditHistoryService, EditHistoryService>();
+
 
 
 
@@ -136,8 +138,11 @@ if (app.Environment.IsDevelopment())
 	var dbContext = scope.ServiceProvider.GetRequiredService<FandomHubDbContext>();
 
 	await ApplicationRoleSeeder.SeedRolesAsync(roleManager);
-	await ApplicationCategorySeeder.SeedCategoriesAsync(dbContext); 
-} 
+	await ApplicationCategorySeeder.SeedAsync(dbContext);
+	await ApplicationHubSeeder.SeedAsync(dbContext);
+	await ApplicationHubCategorySeeder.SeedAsync(dbContext);
+
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

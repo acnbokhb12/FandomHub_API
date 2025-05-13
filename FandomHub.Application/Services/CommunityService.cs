@@ -15,26 +15,46 @@ namespace FandomHub.Application.Services
 	public class CommunityService : BaseService<Community, int>,ICommunityService
 	{
 		private readonly ICommunityRepository _communityRepo;
+		private readonly IEditHistoryRepository _editHistoryRepo;
 		private readonly IMapper _mapper;
         public CommunityService(
 			ICommunityRepository communityRepo,
+			IEditHistoryRepository editHistoryRepo,
 			IMapper mapper
 			) : base(communityRepo) 
         {
             _communityRepo = communityRepo;
+			_editHistoryRepo = editHistoryRepo;
 			_mapper = mapper;
         }
-        public Task<CommunityResponse> CreateCommunity(CommunityCreateRequest request, string userId)
+        public async Task<CommunityResponse> CreateCommunity(CommunityCreateRequest request, string userId)
 		{
 			DateTime now = DateTime.Now;
 			DateTime trimmed = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
 
-			var community = _mapper.Map<Community>( request );
+			var community = _mapper.Map<Community>(request);
 			community.CreatedAt = trimmed;
-			community.CreatedBy = userId;
+			community.CreatedBy = userId; 
 
+			// Save the community
+			var createdCommunity = await _communityRepo.CreateAsync(community);
 
-			throw new NotImplementedException();
+			// Save to EditHistory
+			var editHistory = new EditHistory
+			{
+				TargetEntityType = nameof(Community),
+				TargetEntityId = createdCommunity.CommunityId,
+				PreviousContent = null, // No previous content on create
+				ChangeSummary = "Community created",
+				CreatedBy = userId,
+				CreatedAt = trimmed 
+			};
+			await _editHistoryRepo.CreateAsync(editHistory);
+
+			// Map to response DTO
+			var response = _mapper.Map<CommunityResponse>(createdCommunity);
+
+			return response;
 		}
 	}
 }

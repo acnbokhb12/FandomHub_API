@@ -11,18 +11,32 @@ namespace FandomHub.Infrastructure.Identity
 {
 	public class ApplicationCategorySeeder
 	{
-		public static async Task SeedCategoriesAsync(FandomHubDbContext context)
+		public static async Task SeedAsync(FandomHubDbContext context)
 		{
 			var categories = new List<Category>
 		{
-			new Category { Name = "TV", Slug = "tv", IsActive = true },
-			new Category { Name = "Video Games", Slug = "video_games", IsActive = true },
-			new Category { Name = "Anime", Slug = "anime", IsActive = true },
-			new Category { Name = "Movies", Slug = "movies", IsActive = true },
-			new Category { Name = "Fanon", Slug = "fanon", IsActive = true },
-			new Category { Name = "Books", Slug = "books", IsActive = true },
-			new Category { Name = "Comics", Slug = "comics", IsActive = true },
-			new Category { Name = "Music", Slug = "music", IsActive = true },
+			new Category { Name = "Music", Slug = "music"},
+			new Category { Name = "TV", Slug = "tv" },
+			new Category { Name = "Video Games", Slug = "video-games"},
+			new Category { Name = "Books", Slug = "book" },
+			new Category { Name = "Comics", Slug = "comics" },
+			new Category { Name = "Fanon", Slug = "fanon" },
+			new Category { Name = "Movies", Slug = "movies" },
+			new Category { Name = "Anime", Slug = "anime" },
+			new Category { Name = "Humor", Slug = "humor" },
+			new Category { Name = "Toys", Slug = "toys" },
+			new Category { Name = "Food and Drink", Slug = "food-and-drink" },
+			new Category { Name = "Travel", Slug = "travel" },
+			new Category { Name = "Education", Slug = "education" },
+			new Category { Name = "Finance", Slug = "finance" },
+			new Category { Name = "Politics", Slug = "politics" },
+			new Category { Name = "Technology", Slug = "technology" },
+			new Category { Name = "Science", Slug = "science" },
+			new Category { Name = "Philosophy", Slug = "philosophy" },
+			new Category { Name = "Sports", Slug = "sports" },
+			new Category { Name = "Creative", Slug = "creative" },
+			new Category { Name = "Auto", Slug = "auto" },
+			new Category { Name = "Home and Garden", Slug = "home-and-garden" },
 
 		};
 

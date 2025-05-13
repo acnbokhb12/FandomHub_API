@@ -19,6 +19,8 @@ namespace FandomHub.Infrastructure.Data
 		public virtual DbSet<CommunityCategory> CommunityCategories { get; set; } 
 		public virtual DbSet<EditHistory> EditHistories { get; set; }
 		public virtual DbSet<AuditLog> AuditLogs { get; set; }
+		public virtual DbSet<Hub> Hubs { get; set; }
+		public virtual DbSet<HubCategory> HubCategories { get; set; }
 		private readonly string _currentUser;
 
 		public FandomHubDbContext(DbContextOptions<FandomHubDbContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
@@ -86,7 +88,7 @@ namespace FandomHub.Infrastructure.Data
 			{
 				entity.HasKey(c => c.CommunityId);
 
-				entity.Property(c => c.Title)
+				entity.Property(c => c.Name)
 					.IsRequired()
 					.HasMaxLength(255);
 

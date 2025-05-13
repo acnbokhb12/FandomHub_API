@@ -14,7 +14,7 @@ namespace FandomHub.Domain.Entities
 		[Key]
 		public int CommunityId { get; set; }
 
-		public string? Title { get; set; }  
+		public string? Name { get; set; }  
 
 		public string? LogoImage { get; set; }
 
