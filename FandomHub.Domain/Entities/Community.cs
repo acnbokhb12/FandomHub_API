@@ -26,6 +26,8 @@ namespace FandomHub.Domain.Entities
 
 		public string? Summary { get; set; }
 
+		public int ViewCount { get; set; } = 0;
+
 		public bool IsActive { get; set; } = true;
 
 		public int LanguagesId { get; set; }

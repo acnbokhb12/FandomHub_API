@@ -1,5 +1,6 @@
 ﻿using FandomHub.Application.DTOs.Request;
 using FandomHub.Application.Intefaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -17,6 +18,7 @@ namespace FandomHub.Api.Controllers
         }
 
         [HttpGet("CreateCommunity")]
+        [Authorize]
         public async Task<IActionResult> CreatCommunity(CommunityCreateRequest request)
         {
             try
