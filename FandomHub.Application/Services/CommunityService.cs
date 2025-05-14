@@ -12,32 +12,54 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Application.Services
 {
-	public class CommunityService : BaseService<Community, int>,ICommunityService
+	public class CommunityService : BaseService<Community, int>, ICommunityService
 	{
 		private readonly ICommunityRepository _communityRepo;
 		private readonly IEditHistoryRepository _editHistoryRepo;
+		private readonly IHubCategoryRepository _hubCategoryRepo;
+		private readonly ICommunityCategoryRepository _communityCategoryRepo;
 		private readonly IMapper _mapper;
-        public CommunityService(
+		public CommunityService(
 			ICommunityRepository communityRepo,
 			IEditHistoryRepository editHistoryRepo,
+			IHubCategoryRepository hubCategoryRepo,
+			ICommunityCategoryRepository communityCategoryRepo,
 			IMapper mapper
-			) : base(communityRepo) 
-        {
-            _communityRepo = communityRepo;
+			) : base(communityRepo)
+		{
+			_communityRepo = communityRepo;
 			_editHistoryRepo = editHistoryRepo;
+			_hubCategoryRepo = hubCategoryRepo;
+			_communityCategoryRepo = communityCategoryRepo;
 			_mapper = mapper;
-        }
-        public async Task<CommunityResponse> CreateCommunity(CommunityCreateRequest request, string userId)
+		}
+		public async Task<CommunityResponse> CreateCommunity(CommunityCreateRequest request, string userId)
 		{
 			DateTime now = DateTime.Now;
 			DateTime trimmed = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
 
 			var community = _mapper.Map<Community>(request);
 			community.CreatedAt = trimmed;
-			community.CreatedBy = userId; 
+			community.CreatedBy = userId;
 
 			// Save the community
 			var createdCommunity = await _communityRepo.CreateAsync(community);
+
+			try
+			{
+				var list = request.ListCategories.Select(catId => new CommunityCategory
+				{
+					CommunityId = createdCommunity.CommunityId,
+					CategoryID = catId
+				}).ToList();
+
+				await _communityCategoryRepo.CreateRangeAsync(list);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.InnerException?.Message);
+				throw;
+			}
 
 			// Save to EditHistory
 			var editHistory = new EditHistory
@@ -47,7 +69,7 @@ namespace FandomHub.Application.Services
 				PreviousContent = null, // No previous content on create
 				ChangeSummary = "Community created",
 				CreatedBy = userId,
-				CreatedAt = trimmed 
+				CreatedAt = trimmed
 			};
 			await _editHistoryRepo.CreateAsync(editHistory);
 

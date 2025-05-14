@@ -1,4 +1,4 @@
-﻿using FandomHub.Application.DTOs.Response;
+﻿using FandomHub.Application.Intefaces.Services;
 using FandomHub.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Application.Intefaces.Repositories
 {
-	public interface ICategoryRepository
+	public interface IHubCategoryRepository 
 	{
-		Task GetListCategoriesAsync();
-		  
-
+		public Task<List<Category>> GetCategoriesByHubId(int hubId);
 	}
 }

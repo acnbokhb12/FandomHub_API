@@ -6,12 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FandomHub.Application.Intefaces.Repositories
+namespace FandomHub.Application.Intefaces.Services
 {
-	public interface ICategoryRepository
+	public interface IHubService : IBaseService<Hub, int>
 	{
-		Task GetListCategoriesAsync();
-		  
-
+		Task<List<CategoryResponse>> GetCategoriesByHubId(int hubId);
 	}
 }

@@ -23,6 +23,7 @@ namespace FandomHub.Infrastructure.Identity
 		{ "TV", new List<string> { "Music", "Video Games", "Books", "Comics", "Fanon", "Movies", "Anime" } },
 		{ "Music", new List<string> { "TV", "Video Games", "Books", "Comics", "Fanon", "Movies", "Anime" } },
 		{ "Lifestyle", new List<string> { "Humor", "Toys", "Food and Drink", "Travel", "Education", "Finance", "Politics", "Technology", "Science", "Philosophy", "Sports", "Creative", "Auto", "Home and Garden" } },
+		{ "Orther", new List<string> { "Music", "TV", "Video Games", "Books", "Comics", "Fanon", "Movies", "Anime" } },
 	};
 
 			foreach (var hubEntry in hubCategoryMap)

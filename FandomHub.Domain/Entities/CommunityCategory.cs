@@ -11,9 +11,9 @@ namespace FandomHub.Domain.Entities
 	public class CommunityCategory
 	{ 
 		public int CommunityId { get; set; }
-		public Community Community { get; set; } = null!;
+		public Community? Community { get; set; } 
 
 		public int CategoryID { get; set; }
-		public Category Category { get; set; } = null!;
+		public Category? Category { get; set; } 
 	}
 }

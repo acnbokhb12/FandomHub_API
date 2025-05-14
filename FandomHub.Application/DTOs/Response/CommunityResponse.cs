@@ -22,6 +22,8 @@ namespace FandomHub.Application.DTOs.Response
 
 		public string? Summary { get; set; }
 
+		public int LanguagesId { get; set; }
+
 		public bool isActive { get; set; }
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FandomHub.Application.DTOs.Request;
 using FandomHub.Application.DTOs.Response;
 using FandomHub.Domain.Entities;
 using System;
@@ -10,12 +9,11 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Application.Mapping
 {
-	public class CommunityMapper : Profile
+	public class CategoryMapper : Profile
 	{
-		public CommunityMapper()
+		public CategoryMapper() 
 		{
-			CreateMap<CommunityCreateRequest, Community>();
-			CreateMap<Community, CommunityResponse>();
+			CreateMap<Category, CategoryResponse>();
 		}
 	}
 }

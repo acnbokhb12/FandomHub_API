@@ -21,6 +21,7 @@ namespace FandomHub.Infrastructure.Data
 		public virtual DbSet<AuditLog> AuditLogs { get; set; }
 		public virtual DbSet<Hub> Hubs { get; set; }
 		public virtual DbSet<HubCategory> HubCategories { get; set; }
+		public virtual DbSet<Languages> Languages { get; set; }	
 		private readonly string _currentUser;
 
 		public FandomHubDbContext(DbContextOptions<FandomHubDbContext> options, IHttpContextAccessor httpContextAccessor) : base(options)

@@ -1,5 +1,8 @@
-﻿using FandomHub.Application.Intefaces.Repositories;
+﻿using FandomHub.Application.DTOs.Response;
+using FandomHub.Application.Intefaces.Repositories;
+using FandomHub.Domain.Entities;
 using FandomHub.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +21,6 @@ namespace FandomHub.Infrastructure.Repositories
         public Task GetListCategoriesAsync()
 		{
 			throw new NotImplementedException();
-		}
+		} 
 	}
 }

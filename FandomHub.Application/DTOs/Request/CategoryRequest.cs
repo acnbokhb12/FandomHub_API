@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Application.DTOs.Request
 {
-    class CategoryRequest
+    public class CategoryRequest
     {
     }
 }

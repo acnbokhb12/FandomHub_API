@@ -17,7 +17,7 @@ namespace FandomHub.Api.Controllers
             _service = communityService;
         }
 
-        [HttpGet("CreateCommunity")]
+        [HttpPost("CreateCommunity")]
         [Authorize]
         public async Task<IActionResult> CreatCommunity(CommunityCreateRequest request)
         {

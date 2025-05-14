@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Application.Intefaces.Repositories
 {
-	public interface ICategoryRepository
+	public interface IHubRepository : IBaseRepo<Hub, int> 
 	{
-		Task GetListCategoriesAsync();
-		  
-
+		 
 	}
 }
