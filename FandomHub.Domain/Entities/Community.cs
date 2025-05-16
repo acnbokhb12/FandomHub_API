@@ -14,11 +14,15 @@ namespace FandomHub.Domain.Entities
 		[Key]
 		public int CommunityId { get; set; }
 
-		public string? Name { get; set; }  
+		public string? Name { get; set; }
+
+		public string? SubName { get; set; }
 
 		public string? LogoImage { get; set; }
 
 		public string? CoverImage { get; set; }
+
+		public string? Avatar { get; set; }
 
 		public string? Slug {  get; set; }
 

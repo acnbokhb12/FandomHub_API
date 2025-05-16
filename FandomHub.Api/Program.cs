@@ -18,7 +18,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 
-var builder = WebApplication.CreateBuilder(args); 
+var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
@@ -26,6 +26,20 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowLocalhost5173",
+		builder =>
+		{
+			builder.WithOrigins("http://localhost:5173")
+				   .AllowAnyMethod()
+				   .AllowAnyHeader()
+				   .AllowCredentials();
+		});
+});
+
+
 builder.Services.AddSwaggerGen(c =>
 {
 	c.SwaggerDoc("v1", new OpenApiInfo { Title = "FandomHub_api", Version = "v1" });
@@ -53,27 +67,27 @@ builder.Services.AddSwaggerGen(c =>
 						},
 						new string[] {}
 					}
-				}); 
+				});
 });
 
 builder.Services.AddAuthentication(options =>
 {
-	
+
 	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
+	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 	.AddJwtBearer(options =>
 	{
 		var config = builder.Configuration;
 		options.RequireHttpsMetadata = false;
 		options.UseSecurityTokenValidators = true;
-		options.TokenValidationParameters = new TokenValidationParameters 
+		options.TokenValidationParameters = new TokenValidationParameters
 		{
 			ClockSkew = TimeSpan.Zero,
 			ValidateIssuerSigningKey = true,
 			ValidateIssuer = false,
 			ValidateAudience = false,
-			RequireExpirationTime = true, 
+			RequireExpirationTime = true,
 			ValidAudience = config["Jwt:Audience"],
 			ValidIssuer = config["Jwt:Issuer"],
 			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!))
@@ -100,7 +114,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
-	 
+
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<FandomHubDbContext>()
@@ -109,7 +123,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 
 // Register repositories
 builder.Services.AddScoped(typeof(IBaseRepo<,>), typeof(BaseRepo<,>));
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();  
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICommunityRepository, CommunityRepository>();
 builder.Services.AddScoped<IEditHistoryRepository, EditHistoryRepository>();
 builder.Services.AddScoped<IHubRepository, HubRepository>();
@@ -121,7 +135,7 @@ builder.Services.AddScoped<ICommunityCategoryRepository, CommunityCategoryReposi
 // Register service
 builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IAuthService, AuthService>(); 
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ISlugHelper, SlugHelper>();
 builder.Services.AddScoped<ICommunityService, CommunityService>();
 builder.Services.AddScoped<IEditHistoryService, EditHistoryService>();
@@ -133,7 +147,7 @@ builder.Services.AddScoped<IHubService, HubService>();
 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
- 
+
 
 var app = builder.Build();
 
@@ -151,7 +165,7 @@ if (app.Environment.IsDevelopment())
 	await ApplicationLanguagesSeeder.SeedAsync(dbContext);
 
 }
-
+app.UseCors("AllowLocalhost5173");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

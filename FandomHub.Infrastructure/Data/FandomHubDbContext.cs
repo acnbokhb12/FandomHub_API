@@ -93,10 +93,16 @@ namespace FandomHub.Infrastructure.Data
 					.IsRequired()
 					.HasMaxLength(255);
 
+				entity.Property(c => c.SubName)
+					.HasMaxLength(255);
+
 				entity.Property(c => c.LogoImage)
 					.HasMaxLength(255);
 
 				entity.Property(c => c.CoverImage)
+					.HasMaxLength(255);
+
+				entity.Property(c => c.Avatar)
 					.HasMaxLength(255);
 
 				entity.Property(c => c.Slug)
@@ -143,6 +149,11 @@ namespace FandomHub.Infrastructure.Data
 				entity.Property(p => p.Title)
 					  .HasMaxLength(200);
 
+				entity.Property(p => p.SubTitle)
+					  .HasMaxLength(200);
+
+				entity.Property(p => p.Avatar)
+					  .HasMaxLength(255);
 				entity.Property(p => p.Slug)
 					  .IsRequired()
 					  .HasMaxLength(100);
