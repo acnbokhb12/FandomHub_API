@@ -142,9 +142,9 @@ namespace FandomHub.Infrastructure.Data
 			});
 
 			// PAGE
-			modelBuilder.Entity<Page>(entity =>
+			modelBuilder.Entity<WikiPage>(entity =>
 			{
-				entity.HasKey(p => p.PageId);
+				entity.HasKey(p => p.WikiPageId);
 
 				entity.Property(p => p.Title)
 					  .HasMaxLength(200);
@@ -162,7 +162,7 @@ namespace FandomHub.Infrastructure.Data
 					  .IsUnique();
 
 				entity.HasOne(p => p.Community)
-					  .WithMany(c => c.Pages)
+					  .WithMany(c => c.WikiPages)
 					  .HasForeignKey(p => p.CommunityId)
 					  .OnDelete(DeleteBehavior.Cascade);
 

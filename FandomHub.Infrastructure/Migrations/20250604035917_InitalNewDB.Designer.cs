@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FandomHub.Infrastructure.Migrations
 {
     [DbContext(typeof(FandomHubDbContext))]
-    [Migration("20250514052549_ViewCount")]
-    partial class ViewCount
+    [Migration("20250604035917_InitalNewDB")]
+    partial class InitalNewDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,6 +98,10 @@ namespace FandomHub.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommunityId"));
 
+                    b.Property<string>("Avatar")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("ContentText")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
@@ -141,6 +145,10 @@ namespace FandomHub.Infrastructure.Migrations
                     b.Property<string>("Slug")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("SubName")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Summary")
                         .HasMaxLength(500)
@@ -311,13 +319,17 @@ namespace FandomHub.Infrastructure.Migrations
                     b.ToTable("Languages");
                 });
 
-            modelBuilder.Entity("FandomHub.Domain.Entities.Page", b =>
+            modelBuilder.Entity("FandomHub.Domain.Entities.WikiPage", b =>
                 {
-                    b.Property<int>("PageId")
+                    b.Property<int>("WikiPageId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PageId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WikiPageId"));
+
+                    b.Property<string>("Avatar")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("CommunityId")
                         .HasColumnType("int");
@@ -345,6 +357,10 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("SubTitle")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<string>("Title")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -358,7 +374,7 @@ namespace FandomHub.Infrastructure.Migrations
                     b.Property<int>("ViewCount")
                         .HasColumnType("int");
 
-                    b.HasKey("PageId");
+                    b.HasKey("WikiPageId");
 
                     b.HasIndex("CommunityId");
 
@@ -371,7 +387,7 @@ namespace FandomHub.Infrastructure.Migrations
 
                     b.HasIndex("UpdatedBy");
 
-                    b.ToTable("Page");
+                    b.ToTable("WikiPage");
                 });
 
             modelBuilder.Entity("FandomHub.Infrastructure.Identity.ApplicationUser", b =>
@@ -668,10 +684,10 @@ namespace FandomHub.Infrastructure.Migrations
                     b.Navigation("Hub");
                 });
 
-            modelBuilder.Entity("FandomHub.Domain.Entities.Page", b =>
+            modelBuilder.Entity("FandomHub.Domain.Entities.WikiPage", b =>
                 {
                     b.HasOne("FandomHub.Domain.Entities.Community", "Community")
-                        .WithMany("Pages")
+                        .WithMany("WikiPages")
                         .HasForeignKey("CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -754,7 +770,7 @@ namespace FandomHub.Infrastructure.Migrations
                 {
                     b.Navigation("CommunityCategories");
 
-                    b.Navigation("Pages");
+                    b.Navigation("WikiPages");
                 });
 
             modelBuilder.Entity("FandomHub.Domain.Entities.Hub", b =>

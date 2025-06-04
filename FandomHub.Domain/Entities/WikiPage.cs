@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Domain.Entities
 {
-	[Table("Page")]
-	public class Page :AuditableEntity
+	[Table("WikiPage")]
+	public class WikiPage : AuditableEntity
 	{
 		[Key] 
-		public int PageId { get; set; }
+		public int WikiPageId { get; set; }
 
 		public int CommunityId { get; set; }
 

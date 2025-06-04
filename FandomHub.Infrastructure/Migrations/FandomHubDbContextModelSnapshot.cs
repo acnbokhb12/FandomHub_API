@@ -316,13 +316,13 @@ namespace FandomHub.Infrastructure.Migrations
                     b.ToTable("Languages");
                 });
 
-            modelBuilder.Entity("FandomHub.Domain.Entities.Page", b =>
+            modelBuilder.Entity("FandomHub.Domain.Entities.WikiPage", b =>
                 {
-                    b.Property<int>("PageId")
+                    b.Property<int>("WikiPageId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PageId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WikiPageId"));
 
                     b.Property<string>("Avatar")
                         .HasMaxLength(255)
@@ -371,7 +371,7 @@ namespace FandomHub.Infrastructure.Migrations
                     b.Property<int>("ViewCount")
                         .HasColumnType("int");
 
-                    b.HasKey("PageId");
+                    b.HasKey("WikiPageId");
 
                     b.HasIndex("CommunityId");
 
@@ -384,7 +384,7 @@ namespace FandomHub.Infrastructure.Migrations
 
                     b.HasIndex("UpdatedBy");
 
-                    b.ToTable("Page");
+                    b.ToTable("WikiPage");
                 });
 
             modelBuilder.Entity("FandomHub.Infrastructure.Identity.ApplicationUser", b =>
@@ -681,10 +681,10 @@ namespace FandomHub.Infrastructure.Migrations
                     b.Navigation("Hub");
                 });
 
-            modelBuilder.Entity("FandomHub.Domain.Entities.Page", b =>
+            modelBuilder.Entity("FandomHub.Domain.Entities.WikiPage", b =>
                 {
                     b.HasOne("FandomHub.Domain.Entities.Community", "Community")
-                        .WithMany("Pages")
+                        .WithMany("WikiPages")
                         .HasForeignKey("CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -767,7 +767,7 @@ namespace FandomHub.Infrastructure.Migrations
                 {
                     b.Navigation("CommunityCategories");
 
-                    b.Navigation("Pages");
+                    b.Navigation("WikiPages");
                 });
 
             modelBuilder.Entity("FandomHub.Domain.Entities.Hub", b =>

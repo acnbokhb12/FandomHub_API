@@ -42,7 +42,7 @@ namespace FandomHub.Domain.Entities
 
 		public Hub Hub { get; set; } = null!;
 
-		public virtual ICollection<Page> Pages { get; set; } = new List<Page>();
+		public virtual ICollection<WikiPage> WikiPages { get; set; } = new List<WikiPage>();
 
 		public virtual ICollection<CommunityCategory> CommunityCategories { get; set; } = new List<CommunityCategory>();
 	}
