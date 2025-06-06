@@ -1,4 +1,5 @@
 ﻿using FandomHub.Application.DTOs.Request;
+using FandomHub.Application.DTOs.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,6 @@ namespace FandomHub.Application.Intefaces.Services.Infrastructure
 	{ 
 		Task<string> RegisterAsync(RegisterRequest request);
 
-		Task<string> LoginAsync(LoginRequest request);
+		Task<(string Token, AuthResponse UserInfo)> LoginAsync(LoginRequest request);
 	}
 }

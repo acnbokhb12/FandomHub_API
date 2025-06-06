@@ -1,4 +1,5 @@
 ﻿using FandomHub.Application.DTOs.Request;
+using FandomHub.Application.DTOs.Response;
 using FandomHub.Application.Intefaces.Services.Infrastructure;
 using FandomHub.Infrastructure.Data;
 using FandomHub.Infrastructure.Identity;
@@ -23,7 +24,7 @@ namespace FandomHub.Infrastructure.Services
 			_tokenService = tokenService;
         }
 
-		public async Task<string> LoginAsync(LoginRequest request)
+		public async Task<(string Token, AuthResponse UserInfo)> LoginAsync(LoginRequest request)
 		{
 			var user = await _userManager.FindByNameAsync(request.UserName);
 			if (user == null)
@@ -39,9 +40,13 @@ namespace FandomHub.Infrastructure.Services
 			var roles = await _userManager.GetRolesAsync(user);
 			var role = roles.FirstOrDefault() ?? "User";
             Console.WriteLine("UserId v1: "+ user.Id);
-
 			var token = _tokenService.GenerateToken(user.Id, user.UserName, role);
-			return token;
+			var userInfo = new AuthResponse
+			{
+				UserId = user.Id,  
+				Role = role
+			};
+			return (token, userInfo);
 		}
 
 		public async Task<string> RegisterAsync(RegisterRequest request)

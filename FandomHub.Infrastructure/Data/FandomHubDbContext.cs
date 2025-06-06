@@ -141,7 +141,7 @@ namespace FandomHub.Infrastructure.Data
 					.OnDelete(DeleteBehavior.Restrict);
 			});
 
-			// PAGE
+			// WIKIPAGE
 			modelBuilder.Entity<WikiPage>(entity =>
 			{
 				entity.HasKey(p => p.WikiPageId);

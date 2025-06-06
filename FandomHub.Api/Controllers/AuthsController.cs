@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FandomHub.Api.Controllers
 {
-	[Route("auths/")]
+	[Route("auth/")]
 	[ApiController]
 	public class AuthsController : ControllerBase
 	{
@@ -29,17 +29,27 @@ namespace FandomHub.Api.Controllers
 			}
 		}
 
-		[HttpPost("login")]
+		[HttpPost("signin")]
 		public async Task<IActionResult> Login([FromBody] LoginRequest request)
 		{
 			try
 			{
-				var token = await _authService.LoginAsync(request);
-				return Ok(new { Token = token });
+				var (token, userInfo) = await _authService.LoginAsync(request);
+				return Ok(new {
+					success = true,
+					data = new
+					{
+						Token = token,
+						User = userInfo
+					} 
+				});
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(new { message = ex.Message });
+				return BadRequest(new {
+					success = false,
+					message = "We don't recognize these credentials. Try again or register a new account." 
+				});
 			}
 		}
 
