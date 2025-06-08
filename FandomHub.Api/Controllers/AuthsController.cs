@@ -10,22 +10,35 @@ namespace FandomHub.Api.Controllers
 	public class AuthsController : ControllerBase
 	{
 		private readonly IAuthService _authService;
-        public AuthsController(IAuthService authService)
-        {
-            _authService = authService;
-        }
+		public AuthsController(IAuthService authService)
+		{
+			_authService = authService;
+		}
 
 		[HttpPost("register")]
-		public async Task<IActionResult> RegisteAccount([FromBody]RegisterRequest request)
+		public async Task<IActionResult> RegisteAccount([FromBody] RegisterRequest request)
 		{
 			try
 			{
-				var token = await _authService.RegisterAsync(request);
-				return Ok(new { Token = token });
+				var (token, userInfo) = await _authService.RegisterAsync(request);
+				return Ok(new
+				{
+					success = true,
+					data = new
+					{
+						Token = token,
+						refreshToken = "abc",
+						User = userInfo
+					}
+				});
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(new { message = ex.Message });
+				return BadRequest(new
+				{
+					success = false,
+					message = ex.Message
+				});
 			}
 		}
 
@@ -35,20 +48,23 @@ namespace FandomHub.Api.Controllers
 			try
 			{
 				var (token, userInfo) = await _authService.LoginAsync(request);
-				return Ok(new {
+				return Ok(new
+				{
 					success = true,
 					data = new
 					{
 						Token = token,
+						refreshToken = "abc",
 						User = userInfo
-					} 
+					}
 				});
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(new {
+				return Unauthorized(new
+				{
 					success = false,
-					message = "We don't recognize these credentials. Try again or register a new account." 
+					message = "We don't recognize these credentials. Try again or register a new account."
 				});
 			}
 		}

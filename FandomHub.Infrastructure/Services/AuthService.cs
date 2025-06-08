@@ -6,6 +6,7 @@ using FandomHub.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,7 +50,7 @@ namespace FandomHub.Infrastructure.Services
 			return (token, userInfo);
 		}
 
-		public async Task<string> RegisterAsync(RegisterRequest request)
+		public async Task<(string Token, AuthResponse UserInfo)> RegisterAsync(RegisterRequest request)
 		{
 			var existUserName = await _userManager.FindByNameAsync(request.UserName);
 			if (existUserName != null)
@@ -75,13 +76,19 @@ namespace FandomHub.Infrastructure.Services
 			}
 			var roleResult = await _userManager.AddToRoleAsync(user, "User");
 			if (!roleResult.Succeeded)
-			{
-				Console.WriteLine("Failed to assign role");
-
+			{  
 				throw new Exception("Failed to assign role.");
 			} 
 			var token = _tokenService.GenerateToken(user.Id, user.UserName, "User");
-			return token;
+			var roles = await _userManager.GetRolesAsync(user);
+			var role = roles.FirstOrDefault();
+			var userInfo = new AuthResponse
+			{
+				UserId = user.Id,
+				Role = role
+			};
+			return (token, userInfo);
+			;
 		}
 	}
 }

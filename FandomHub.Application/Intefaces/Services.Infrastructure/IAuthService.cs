@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 namespace FandomHub.Application.Intefaces.Services.Infrastructure
 {
 	public interface IAuthService
-	{ 
-		Task<string> RegisterAsync(RegisterRequest request);
+	{
+		Task<(string Token, AuthResponse UserInfo)> RegisterAsync(RegisterRequest request);
 
 		Task<(string Token, AuthResponse UserInfo)> LoginAsync(LoginRequest request);
 	}
