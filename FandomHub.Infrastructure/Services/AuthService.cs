@@ -14,13 +14,11 @@ using System.Threading.Tasks;
 namespace FandomHub.Infrastructure.Services
 {
 	public class AuthService : IAuthService
-	{
-		private readonly FandomHubDbContext _context;
-		private readonly UserManager<ApplicationUser> _userManager;
-		private readonly ITokenService _tokenService;
-        public AuthService(UserManager<ApplicationUser> userManager, ITokenService tokenService, FandomHubDbContext fandomHubDb)
-        {
-			_context = fandomHubDb;
+	{ 
+		private readonly UserManager<IdentityApplicationUser> _userManager;
+		private readonly ITokenService _tokenService; 
+        public AuthService(UserManager<IdentityApplicationUser> userManager, ITokenService tokenService)
+        { 
             _userManager = userManager;
 			_tokenService = tokenService;
         }
@@ -44,7 +42,8 @@ namespace FandomHub.Infrastructure.Services
 			var token = _tokenService.GenerateToken(user.Id, user.UserName, role);
 			var userInfo = new AuthResponse
 			{
-				UserId = user.Id,  
+				UserId = user.Id,
+				FullName = user.FullName,
 				Role = role
 			};
 			return (token, userInfo);
@@ -63,7 +62,7 @@ namespace FandomHub.Infrastructure.Services
 				throw new Exception("Email is already taken.");
 			}
 
-			var user = new ApplicationUser
+			var user = new IdentityApplicationUser
 			{ 
 				UserName = request.UserName,
 				Email = request.Email,
@@ -85,6 +84,7 @@ namespace FandomHub.Infrastructure.Services
 			var userInfo = new AuthResponse
 			{
 				UserId = user.Id,
+				UserName= "",
 				Role = role
 			};
 			return (token, userInfo);

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Infrastructure.Data
 {
-	public class FandomHubDbContext : IdentityDbContext<ApplicationUser>
+	public class FandomHubDbContext : IdentityDbContext<IdentityApplicationUser>
 	{
 		public virtual DbSet<Category> Categories { get; set; } 
 		public virtual DbSet<Community> Communities { get; set; }
@@ -22,6 +22,7 @@ namespace FandomHub.Infrastructure.Data
 		public virtual DbSet<Hub> Hubs { get; set; }
 		public virtual DbSet<HubCategory> HubCategories { get; set; }
 		public virtual DbSet<Languages> Languages { get; set; }	
+		public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 		private readonly string _currentUser;
 
 		public FandomHubDbContext(DbContextOptions<FandomHubDbContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
@@ -127,15 +128,15 @@ namespace FandomHub.Infrastructure.Data
 					.HasForeignKey(c => c.LanguagesId)
 					.OnDelete(DeleteBehavior.Restrict);
 
-				entity.HasOne<ApplicationUser>()
+				entity.HasOne<IdentityApplicationUser>()
 					.WithMany()
 					.HasForeignKey("CreatedBy")
 					.OnDelete(DeleteBehavior.Restrict);
-				entity.HasOne<ApplicationUser>()
+				entity.HasOne<IdentityApplicationUser>()
 					.WithMany()
 					.HasForeignKey("UpdatedBy")
 					.OnDelete(DeleteBehavior.Restrict);
-				entity.HasOne<ApplicationUser>()
+				entity.HasOne<IdentityApplicationUser>()
 					.WithMany()
 					.HasForeignKey("DeleteBy")
 					.OnDelete(DeleteBehavior.Restrict);
@@ -166,15 +167,15 @@ namespace FandomHub.Infrastructure.Data
 					  .HasForeignKey(p => p.CommunityId)
 					  .OnDelete(DeleteBehavior.Cascade);
 
-				entity.HasOne<ApplicationUser>()
+				entity.HasOne<IdentityApplicationUser>()
 					.WithMany()
 					.HasForeignKey("CreatedBy")
 					.OnDelete(DeleteBehavior.Restrict);
-				entity.HasOne<ApplicationUser>()
+				entity.HasOne<IdentityApplicationUser>()
 					.WithMany()
 					.HasForeignKey("UpdatedBy")
 					.OnDelete(DeleteBehavior.Restrict);
-				entity.HasOne<ApplicationUser>()
+				entity.HasOne<IdentityApplicationUser>()
 					.WithMany()
 					.HasForeignKey("DeleteBy")
 					.OnDelete(DeleteBehavior.Restrict);
@@ -225,20 +226,26 @@ namespace FandomHub.Infrastructure.Data
 				entity.Property(eh => eh.IsActive)
 					.HasDefaultValue(true);
 
-				entity.HasOne<ApplicationUser>() 
+				entity.HasOne<IdentityApplicationUser>() 
 					.WithMany()                   
 					.HasForeignKey("CreatedBy")    
 					.OnDelete(DeleteBehavior.Restrict);
-				entity.HasOne<ApplicationUser>()
+				entity.HasOne<IdentityApplicationUser>()
 					.WithMany()
 					.HasForeignKey("UpdatedBy")
 					.OnDelete(DeleteBehavior.Restrict);
-				entity.HasOne<ApplicationUser>()
+				entity.HasOne<IdentityApplicationUser>()
 					.WithMany()
 					.HasForeignKey("DeleteBy")
 					.OnDelete(DeleteBehavior.Restrict);
 			});
-			 
+
+			modelBuilder.Entity<RefreshToken>()
+				.HasOne<IdentityApplicationUser>()
+				.WithMany()
+				.HasForeignKey(rt => rt.UserId)
+				.OnDelete(DeleteBehavior.Cascade);
+
 		}
 
 		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

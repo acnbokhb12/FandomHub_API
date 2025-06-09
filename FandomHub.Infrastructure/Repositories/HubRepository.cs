@@ -10,11 +10,9 @@ using System.Threading.Tasks;
 namespace FandomHub.Infrastructure.Repositories
 {
 	public class HubRepository : BaseRepo<Hub, int>, IHubRepository
-	{
-		private readonly FandomHubDbContext _context;
+	{ 
 		public HubRepository(FandomHubDbContext context) : base(context)
-		{
-			_context = context;
+		{ 
 		}
 	} 
 }

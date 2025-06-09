@@ -11,7 +11,7 @@ namespace FandomHub.Infrastructure.Repositories
 {
 	public class BaseRepo<T, Tkey> : IBaseRepo<T, Tkey> where T : class
 	{
-		private readonly FandomHubDbContext _context;
+		protected readonly FandomHubDbContext _context;
         public BaseRepo(FandomHubDbContext context)
         {
             _context = context;

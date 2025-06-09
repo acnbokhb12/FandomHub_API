@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Infrastructure.Identity
 {
-	public class ApplicationUser : IdentityUser
+	public class IdentityApplicationUser : IdentityUser
 	{
 		public string? FullName { get; set; }
 

@@ -112,7 +112,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 	options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddAuthorization();
 
-builder.Services.AddIdentityCore<ApplicationUser>(options =>
+builder.Services.AddIdentityCore<IdentityApplicationUser>(options =>
 {
 
 })
@@ -129,17 +129,25 @@ builder.Services.AddScoped<IEditHistoryRepository, EditHistoryRepository>();
 builder.Services.AddScoped<IHubRepository, HubRepository>();
 builder.Services.AddScoped<IHubCategoryRepository, HubCategoryRepository>();
 builder.Services.AddScoped<ICommunityCategoryRepository, CommunityCategoryRepository>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+
 
 
 
 // Register service
 builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
-builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ISlugHelper, SlugHelper>();
 builder.Services.AddScoped<ICommunityService, CommunityService>();
 builder.Services.AddScoped<IEditHistoryService, EditHistoryService>();
 builder.Services.AddScoped<IHubService, HubService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+
 
 
 

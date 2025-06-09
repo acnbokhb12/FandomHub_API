@@ -1,0 +1,39 @@
+﻿using FandomHub.Application.DTOs.Response;
+using FandomHub.Application.Intefaces.Repositories;
+using FandomHub.Domain.Models;
+using FandomHub.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FandomHub.Infrastructure.Repositories
+{
+	public class UserRepository : IUserRepository
+	{
+		private readonly UserManager<IdentityApplicationUser> _identityUserManager;
+
+		public UserRepository(UserManager<IdentityApplicationUser> userManager)
+		{
+			_identityUserManager = userManager;
+		}
+
+		public async Task<AuthResponse> FindByIdAsync(string userId)
+		{
+			var userIdentity = await _identityUserManager.FindByIdAsync(userId);
+			var roles = await _identityUserManager.GetRolesAsync(userIdentity);
+			var role = roles.FirstOrDefault() ?? "User";
+			var user = new AuthResponse
+			{
+				UserId = userIdentity.Id,
+				UserName = userIdentity.UserName,
+				FullName = userIdentity.FullName,
+				Role = role,
+			};
+			return user;
+
+		}
+	}
+}
