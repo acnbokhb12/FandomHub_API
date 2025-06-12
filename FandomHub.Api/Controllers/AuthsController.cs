@@ -1,6 +1,5 @@
 ﻿using FandomHub.Application.DTOs.Request;
 using FandomHub.Application.Intefaces.Services;
-using FandomHub.Application.Intefaces.Services.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

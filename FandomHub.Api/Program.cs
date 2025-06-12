@@ -2,7 +2,6 @@ using FandomHub.Application.Common;
 using FandomHub.Application.Intefaces.Common;
 using FandomHub.Application.Intefaces.Repositories;
 using FandomHub.Application.Intefaces.Services;
-using FandomHub.Application.Intefaces.Services.Infrastructure;
 using FandomHub.Application.Services;
 using FandomHub.Infrastructure.Data;
 using FandomHub.Infrastructure.Identity;

@@ -1,4 +1,4 @@
-﻿using FandomHub.Application.Intefaces.Services.Infrastructure;
+﻿using FandomHub.Application.Intefaces.Services;
 using FandomHub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
