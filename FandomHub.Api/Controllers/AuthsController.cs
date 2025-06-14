@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FandomHub.Api.Controllers
 {
-	[Route("auth/")]
+	[Route("api/v1/auth")]
 	[ApiController]
 	public class AuthsController : ControllerBase
 	{

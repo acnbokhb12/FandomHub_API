@@ -18,9 +18,10 @@ namespace FandomHub.Infrastructure.Repositories
         {
             _context = context;
         }
-        public Task GetListCategoriesAsync()
+
+		public Task GetCategoriesByHubId(int hubId)
 		{
 			throw new NotImplementedException();
-		} 
+		}
 	}
 }

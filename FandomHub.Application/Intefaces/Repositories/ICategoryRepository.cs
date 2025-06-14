@@ -10,7 +10,7 @@ namespace FandomHub.Application.Intefaces.Repositories
 {
 	public interface ICategoryRepository
 	{
-		Task GetListCategoriesAsync();
+		Task GetCategoriesByHubId(int hubId);
 		  
 
 	}

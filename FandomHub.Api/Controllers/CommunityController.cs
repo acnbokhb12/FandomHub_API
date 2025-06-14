@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace FandomHub.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/communities")]
     [ApiController]
     public class CommunityController : ControllerBase
     {
@@ -17,9 +17,9 @@ namespace FandomHub.Api.Controllers
             _service = communityService;
         }
 
-        [HttpPost("CreateCommunity")]
+        [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreatCommunity(CommunityCreateRequest request)
+        public async Task<IActionResult> CreateCommunity([FromBody] CommunityCreateRequest request)
         {
             try
             {

@@ -26,10 +26,6 @@ namespace FandomHub.Application.Services
 			_mapper = mapper;
 		}
 
-		public async Task<List<CategoryResponse>> GetCategoriesByHubId(int hubId)
-		{
-			var list = await _categoryRepo.GetCategoriesByHubId(hubId);
-			return _mapper.Map<List<CategoryResponse>>(list);
-		}
+		 
 	}
 }

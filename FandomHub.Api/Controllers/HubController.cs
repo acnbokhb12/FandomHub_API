@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FandomHub.Api.Controllers
 {
-	[Route("hub/")]
+	[Route("api/v1/hubs")]
 	[ApiController]
 	public class HubController : ControllerBase
 	{
@@ -14,7 +14,7 @@ namespace FandomHub.Api.Controllers
 			_hubService = hubService;	
 		}
 
-		[HttpGet("GetAll")]
+		[HttpGet]
 		public async Task<IActionResult> GetAll()
 		{
 			try
@@ -28,23 +28,7 @@ namespace FandomHub.Api.Controllers
 			}
 		}
 
-		[HttpGet("GetById/{id}")]
-		public async Task<IActionResult> GetById([FromRoute]int id)
-		{
-			try
-			{
-				var hub = await _hubService.GetCategoriesByHubId(id);
-				if (hub == null)
-				{
-					return NotFound(new { message = "Hub not found" });
-				}
-				return Ok(new { data = hub });
-			}
-			catch (Exception ex)
-			{
-				return BadRequest(new { message = ex.Message });
-			}
-		}
+		 
 
 	}
 }
