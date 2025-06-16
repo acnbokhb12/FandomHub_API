@@ -30,6 +30,6 @@ namespace FandomHub.Domain.Entities
 
 		public bool IsActive { get; set; } = true;
 
-		public Community Community { get; set; } = null!;
+		public Community Community { get; set; } = null!; 
 	}
 }

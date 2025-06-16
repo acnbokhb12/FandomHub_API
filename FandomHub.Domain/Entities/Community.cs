@@ -36,7 +36,7 @@ namespace FandomHub.Domain.Entities
 
 		public int LanguagesId { get; set; }
 
-		public int HubId { get; set; }
+		public int HubId { get; set; } 
 
 		public Languages Languages { get; set; } = null!;
 

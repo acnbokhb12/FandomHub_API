@@ -1,6 +1,5 @@
 ﻿using FandomHub.Application.DTOs.Response;
-using FandomHub.Application.Intefaces.Repositories;
-using FandomHub.Domain.Models;
+using FandomHub.Application.Intefaces.Repositories; 
 using FandomHub.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using System;

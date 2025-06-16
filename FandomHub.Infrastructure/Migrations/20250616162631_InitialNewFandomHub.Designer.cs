@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FandomHub.Infrastructure.Migrations
 {
     [DbContext(typeof(FandomHubDbContext))]
-    [Migration("20250609024923_AddRefreshToken")]
-    partial class AddRefreshToken
+    [Migration("20250616162631_InitialNewFandomHub")]
+    partial class InitialNewFandomHub
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -114,13 +114,13 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeleteAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeleteBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("HubId")
                         .HasColumnType("int");
@@ -158,22 +158,16 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ViewCount")
                         .HasColumnType("int");
 
                     b.HasKey("CommunityId");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeleteBy");
-
                     b.HasIndex("HubId");
 
                     b.HasIndex("LanguagesId");
-
-                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("Community");
                 });
@@ -209,13 +203,13 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeleteAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeleteBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -236,15 +230,9 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeleteBy");
-
-                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("EditHistory");
                 });
@@ -319,6 +307,67 @@ namespace FandomHub.Infrastructure.Migrations
                     b.ToTable("Languages");
                 });
 
+            modelBuilder.Entity("FandomHub.Domain.Entities.Notification", b =>
+                {
+                    b.Property<int>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRead")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("NotificationTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("NotificationId");
+
+                    b.HasIndex("NotificationTypeId");
+
+                    b.ToTable("Notification");
+                });
+
+            modelBuilder.Entity("FandomHub.Domain.Entities.NotificationType", b =>
+                {
+                    b.Property<int>("NotificationTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationTypeId"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("NotificationTypeId");
+
+                    b.ToTable("NotificationType");
+                });
+
             modelBuilder.Entity("FandomHub.Domain.Entities.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
@@ -327,7 +376,7 @@ namespace FandomHub.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Expires")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("ExpiresAt")
@@ -373,13 +422,13 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeleteAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeleteBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -401,7 +450,7 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ViewCount")
                         .HasColumnType("int");
@@ -410,19 +459,13 @@ namespace FandomHub.Infrastructure.Migrations
 
                     b.HasIndex("CommunityId");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeleteBy");
-
                     b.HasIndex("Slug")
                         .IsUnique();
-
-                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("WikiPage");
                 });
 
-            modelBuilder.Entity("FandomHub.Infrastructure.Identity.ApplicationUser", b =>
+            modelBuilder.Entity("FandomHub.Infrastructure.Identity.IdentityApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -631,16 +674,6 @@ namespace FandomHub.Infrastructure.Migrations
 
             modelBuilder.Entity("FandomHub.Domain.Entities.Community", b =>
                 {
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("DeleteBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("FandomHub.Domain.Entities.Hub", "Hub")
                         .WithMany()
                         .HasForeignKey("HubId")
@@ -652,11 +685,6 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasForeignKey("LanguagesId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UpdatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Hub");
 
@@ -682,24 +710,6 @@ namespace FandomHub.Infrastructure.Migrations
                     b.Navigation("Community");
                 });
 
-            modelBuilder.Entity("FandomHub.Domain.Entities.EditHistory", b =>
-                {
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("DeleteBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UpdatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("FandomHub.Domain.Entities.HubCategory", b =>
                 {
                     b.HasOne("FandomHub.Domain.Entities.Category", "Category")
@@ -719,9 +729,20 @@ namespace FandomHub.Infrastructure.Migrations
                     b.Navigation("Hub");
                 });
 
+            modelBuilder.Entity("FandomHub.Domain.Entities.Notification", b =>
+                {
+                    b.HasOne("FandomHub.Domain.Entities.NotificationType", "NotificationType")
+                        .WithMany()
+                        .HasForeignKey("NotificationTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NotificationType");
+                });
+
             modelBuilder.Entity("FandomHub.Domain.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
+                    b.HasOne("FandomHub.Infrastructure.Identity.IdentityApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -735,21 +756,6 @@ namespace FandomHub.Infrastructure.Migrations
                         .HasForeignKey("CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("DeleteBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UpdatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Community");
                 });
@@ -765,7 +771,7 @@ namespace FandomHub.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
+                    b.HasOne("FandomHub.Infrastructure.Identity.IdentityApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -774,7 +780,7 @@ namespace FandomHub.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
+                    b.HasOne("FandomHub.Infrastructure.Identity.IdentityApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -789,7 +795,7 @@ namespace FandomHub.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
+                    b.HasOne("FandomHub.Infrastructure.Identity.IdentityApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -798,7 +804,7 @@ namespace FandomHub.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("FandomHub.Infrastructure.Identity.ApplicationUser", null)
+                    b.HasOne("FandomHub.Infrastructure.Identity.IdentityApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

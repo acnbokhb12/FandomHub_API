@@ -1,7 +1,6 @@
 ﻿using FandomHub.Application.DTOs.Response;
 using FandomHub.Application.Intefaces.Repositories;
-using FandomHub.Application.Intefaces.Services;
-using FandomHub.Domain.Models;
+using FandomHub.Application.Intefaces.Services; 
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,19 +16,19 @@ namespace FandomHub.Application.Services
 		{
 			_userRepository = userRepository;
 		}
-		public Task<bool> CheckPasswordAsync(ApplicationUser user, string password)
-		{
-			throw new NotImplementedException();
-		}
+		//public Task<bool> CheckPasswordAsync(ApplicationUser user, string password)
+		//{
+		//	throw new NotImplementedException();
+		//}
 
 		public Task<AuthResponse> FindByIdAsync(string userId)
 		{
 			return _userRepository.FindByIdAsync(userId);
 		}
 
-		public Task<ApplicationUser> FindByNameAsync(string username)
-		{
-			throw new NotImplementedException();
-		}
+		//public Task<ApplicationUser> FindByNameAsync(string username)
+		//{
+		//	throw new NotImplementedException();
+		//}
 	}
 }

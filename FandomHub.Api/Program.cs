@@ -129,7 +129,9 @@ builder.Services.AddScoped<IHubRepository, HubRepository>();
 builder.Services.AddScoped<IHubCategoryRepository, HubCategoryRepository>();
 builder.Services.AddScoped<ICommunityCategoryRepository, CommunityCategoryRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>(); 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+
 
 
 // Register service

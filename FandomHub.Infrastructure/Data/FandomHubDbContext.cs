@@ -23,6 +23,10 @@ namespace FandomHub.Infrastructure.Data
 		public virtual DbSet<HubCategory> HubCategories { get; set; }
 		public virtual DbSet<Languages> Languages { get; set; }	
 		public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+		public virtual DbSet<WikiPage> WikiPages { get; set; }
+		public virtual DbSet<Notification> Notifications { get; set; }
+		public virtual DbSet<NotificationType> NotificationTypes { get; set; }
+
 		private readonly string _currentUser;
 
 		public FandomHubDbContext(DbContextOptions<FandomHubDbContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
@@ -128,18 +132,18 @@ namespace FandomHub.Infrastructure.Data
 					.HasForeignKey(c => c.LanguagesId)
 					.OnDelete(DeleteBehavior.Restrict);
 
-				entity.HasOne<IdentityApplicationUser>()
-					.WithMany()
-					.HasForeignKey("CreatedBy")
-					.OnDelete(DeleteBehavior.Restrict);
-				entity.HasOne<IdentityApplicationUser>()
-					.WithMany()
-					.HasForeignKey("UpdatedBy")
-					.OnDelete(DeleteBehavior.Restrict);
-				entity.HasOne<IdentityApplicationUser>()
-					.WithMany()
-					.HasForeignKey("DeleteBy")
-					.OnDelete(DeleteBehavior.Restrict);
+				//entity.HasOne<IdentityApplicationUser>()
+				//	.WithMany()
+				//	.HasForeignKey("CreatedBy")
+				//	.OnDelete(DeleteBehavior.Restrict);
+				//entity.HasOne<IdentityApplicationUser>()
+				//	.WithMany()
+				//	.HasForeignKey("UpdatedBy")
+				//	.OnDelete(DeleteBehavior.Restrict);
+				//entity.HasOne<IdentityApplicationUser>()
+				//	.WithMany()
+				//	.HasForeignKey("DeleteBy")
+				//	.OnDelete(DeleteBehavior.Restrict);
 			});
 
 			// WIKIPAGE
@@ -167,19 +171,34 @@ namespace FandomHub.Infrastructure.Data
 					  .HasForeignKey(p => p.CommunityId)
 					  .OnDelete(DeleteBehavior.Cascade);
 
-				entity.HasOne<IdentityApplicationUser>()
-					.WithMany()
-					.HasForeignKey("CreatedBy")
-					.OnDelete(DeleteBehavior.Restrict);
-				entity.HasOne<IdentityApplicationUser>()
-					.WithMany()
-					.HasForeignKey("UpdatedBy")
-					.OnDelete(DeleteBehavior.Restrict);
-				entity.HasOne<IdentityApplicationUser>()
-					.WithMany()
-					.HasForeignKey("DeleteBy")
-					.OnDelete(DeleteBehavior.Restrict);
+				//entity.HasOne<IdentityApplicationUser>()
+				//	.WithMany()
+				//	.HasForeignKey("CreatedBy")
+				//	.OnDelete(DeleteBehavior.Restrict);
+				//entity.HasOne<IdentityApplicationUser>()
+				//	.WithMany()
+				//	.HasForeignKey("UpdatedBy")
+				//	.OnDelete(DeleteBehavior.Restrict);
+				//entity.HasOne<IdentityApplicationUser>()
+				//	.WithMany()
+				//	.HasForeignKey("DeleteBy")
+				//	.OnDelete(DeleteBehavior.Restrict);
 			});
+
+			modelBuilder.Entity<Notification>(entity =>
+			{
+				entity.HasKey(n => n.NotificationId);
+				entity.Property(n => n.Message)
+					  .IsRequired()
+					  .HasMaxLength(200); 
+				entity.Property(n => n.IsRead)
+					  .HasDefaultValue(false);
+				//entity.HasOne<IdentityApplicationUser>()
+				//	.WithMany()
+				//	.HasForeignKey("UserId")
+				//	.OnDelete(DeleteBehavior.Restrict);
+			});
+
 
 			// LANGUAGES
 			modelBuilder.Entity<Languages>(entity =>
@@ -226,18 +245,18 @@ namespace FandomHub.Infrastructure.Data
 				entity.Property(eh => eh.IsActive)
 					.HasDefaultValue(true);
 
-				entity.HasOne<IdentityApplicationUser>() 
-					.WithMany()                   
-					.HasForeignKey("CreatedBy")    
-					.OnDelete(DeleteBehavior.Restrict);
-				entity.HasOne<IdentityApplicationUser>()
-					.WithMany()
-					.HasForeignKey("UpdatedBy")
-					.OnDelete(DeleteBehavior.Restrict);
-				entity.HasOne<IdentityApplicationUser>()
-					.WithMany()
-					.HasForeignKey("DeleteBy")
-					.OnDelete(DeleteBehavior.Restrict);
+				//entity.HasOne<IdentityApplicationUser>() 
+				//	.WithMany()                   
+				//	.HasForeignKey("CreatedBy")    
+				//	.OnDelete(DeleteBehavior.Restrict);
+				//entity.HasOne<IdentityApplicationUser>()
+				//	.WithMany()
+				//	.HasForeignKey("UpdatedBy")
+				//	.OnDelete(DeleteBehavior.Restrict);
+				//entity.HasOne<IdentityApplicationUser>()
+				//	.WithMany()
+				//	.HasForeignKey("DeleteBy")
+				//	.OnDelete(DeleteBehavior.Restrict);
 			});
 
 			modelBuilder.Entity<RefreshToken>()
