@@ -13,11 +13,12 @@ namespace FandomHub.Api.Controllers
 		private readonly IUserService _userService;
 		private readonly IRefreshTokenService _refreshTokenService;
 		private readonly ITokenService _tokenService;
-		public AuthsController(IAuthService authService, IUserService userService, IRefreshTokenService refreshTokenService)
+		public AuthsController(IAuthService authService, IUserService userService, IRefreshTokenService refreshTokenService, ITokenService tokenService)
 		{
 			_authService = authService;
 			_userService = userService;
 			_refreshTokenService = refreshTokenService;
+			_tokenService = tokenService;
 		}
 
 		[HttpPost("register")]

@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Application.Intefaces.Repositories
 {
-	public interface ICategoryRepository
+	public interface ICategoryRepository : IBaseRepo<Category, int>
 	{
-		Task GetCategoriesByHubId(int hubId);
-		  
-
+		Task<Category?> GetCategoryByIdWithCondition(int hubId);
+		Task<List<Category>> GetCategoriesWithCondition(); 
 	}
 }

@@ -143,6 +143,8 @@ builder.Services.AddScoped<IEditHistoryService, EditHistoryService>();
 builder.Services.AddScoped<IHubService, HubService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IHubCategoryService, HubCategoryService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 
 
 

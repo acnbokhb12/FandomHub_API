@@ -11,17 +11,23 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Infrastructure.Repositories
 {
-	public class CategoryRepository : ICategoryRepository
-	{
-		private readonly FandomHubDbContext _context;
-        public CategoryRepository(FandomHubDbContext context)
-        {
-            _context = context;
+	public class CategoryRepository : BaseRepo<Category, int>, ICategoryRepository
+	{ 
+        public CategoryRepository(FandomHubDbContext context) : base(context)
+		{
         }
 
-		public Task GetCategoriesByHubId(int hubId)
+		public async Task<List<Category>> GetCategoriesWithCondition()
 		{
-			throw new NotImplementedException();
+			return await _context.Categories.Where(c => c.IsActive == true)
+				.ToListAsync();
 		}
+
+		public async Task<Category?> GetCategoryByIdWithCondition(int hubId)
+		{
+			return await _context.Categories.FirstOrDefaultAsync(c => c.CategoryID == hubId && c.IsActive == true);
+		}
+
+	 
 	}
 }
