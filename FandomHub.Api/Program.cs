@@ -146,9 +146,9 @@ builder.Services.AddScoped<IHubService, HubService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IHubCategoryService, HubCategoryService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
-
-
+ 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
