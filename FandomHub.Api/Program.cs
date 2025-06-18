@@ -131,8 +131,8 @@ builder.Services.AddScoped<ICommunityCategoryRepository, CommunityCategoryReposi
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
-
-
+builder.Services.AddScoped<IWikiPageRepository, WikiPageRepository>();
+ 
 
 // Register service
 builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
@@ -147,8 +147,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IHubCategoryService, HubCategoryService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IWikiPageService, WikiPageService>(); 
 
- 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
