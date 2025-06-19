@@ -41,6 +41,11 @@ namespace FandomHub.Infrastructure.Repositories
 			return await _context.Set<T>().FindAsync(id);
 		}
 
+		public async Task<bool> SaveChangeAsync()
+		{
+			return await _context.SaveChangesAsync() > 0;
+		}
+
 		public async Task<bool> UpdateAsync(Tkey id, T entity)
 		{
 			var existing = await _context.Set<T>().FindAsync(id);

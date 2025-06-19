@@ -14,6 +14,10 @@ namespace FandomHub.Application.Mapping
 	{
 		public CommunityMapper()
 		{
+			CreateMap<CommunityUpdateRequest, Community>()
+				.ForAllMembers(opt => opt.Condition((src, dest, srcMember) =>
+			srcMember != null && !(srcMember is string str && string.IsNullOrWhiteSpace(str))));
+
 			CreateMap<CommunityCreateRequest, Community>();
 			CreateMap<Community, CommunityResponse>();
 		}

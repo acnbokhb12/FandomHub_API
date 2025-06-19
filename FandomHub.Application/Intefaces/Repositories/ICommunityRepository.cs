@@ -9,5 +9,8 @@ namespace FandomHub.Application.Intefaces.Repositories
 {
     public interface ICommunityRepository : IBaseRepo<Community, int>
     {
+        Task<List<Community>> GetAllActive();
+
+        Task<Community?> GetByIdActive(int id);
     }
 }

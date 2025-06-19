@@ -14,6 +14,6 @@ namespace FandomHub.Application.Intefaces.Repositories
 		Task<bool> UpdateAsync(Tkey id, T entity);
 		Task<T?> UpdateTAsync(Tkey id, T entity);
 		Task<IEnumerable<T>> GetAllAsync();
-
+		Task<bool> SaveChangeAsync();
 	}
 }

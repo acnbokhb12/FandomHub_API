@@ -17,23 +17,72 @@ namespace FandomHub.Api.Controllers
             _service = communityService;
         }
 
-        [HttpPost]
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetCommunityById([FromRoute] int id)
+		{
+			try
+			{
+				var community = await _service.GetCommunityByIdActive(id);
+				if (community == null) return NotFound(new { message = "Community not found" });
+				return Ok(new { data = community });
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(new { message = ex.Message });
+			}
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetAllActiveCommunities()
+		{
+			try
+			{
+				var communities = await _service.GetAllActive();
+				if (communities == null || !communities.Any()) return NotFound(new { message = "No communities found" });
+				return Ok(new { data = communities });
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(new { message = ex.Message });
+			}
+		}
+
+		[HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateCommunity([FromBody] CommunityCreateRequest request)
         {
             try
             {
                 string userId = GetUserId();
-                var response = await _service.CreateCommunity(request, userId);
+                var community = await _service.CreateCommunity(request, userId);
                 return Ok(new
                 {
-                    data = response
-                });
+                    data = community
+				});
             }catch(Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }	 
 		}
+
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> UpdateCommunity([FromBody] CommunityUpdateRequest request)
+		{
+			try
+			{
+				string userId = GetUserId();
+				var community = await _service.UpdateCommunity(request, userId);
+				return Ok(new
+				{
+					data = community
+				});
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(new { message = ex.Message });
+			}
+		} 
 
 		private string GetUserId()
 		{

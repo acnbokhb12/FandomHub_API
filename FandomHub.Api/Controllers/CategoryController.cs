@@ -16,13 +16,26 @@ namespace FandomHub.Api.Controllers
 			_categoryService = categoryService;
 		}
 
-
-		[HttpGet("/api/v1/hubs/{id}/categories")]
-		public async Task<IActionResult> GetCategoriesByHubId([FromRoute] int id)
+		[HttpGet]
+		public async Task<IActionResult> GetAllCategories()
 		{
 			try
 			{
-				var hub = await _hubCategoryService.GetCategoriesByHubId(id);
+				var categories = await _categoryService.GetCategoriesWithCondition();
+				return Ok(new { data = categories });
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(new { message = ex.Message });
+			}
+		}
+
+		[HttpGet("/api/v1/hubs/{hubId}/categories")]
+		public async Task<IActionResult> GetCategoriesByHubId([FromRoute] int hubId)
+		{
+			try
+			{
+				var hub = await _hubCategoryService.GetCategoriesByHubId(hubId);
 				if (hub == null)
 				{
 					return NotFound(new { message = "Hub not found" });
@@ -52,18 +65,6 @@ namespace FandomHub.Api.Controllers
 				return BadRequest(new {message = ex.Message});
 			}
 		}
-		[HttpGet]
-		public async Task<IActionResult> GetAllCategories()
-		{
-			try
-			{
-				var categories = await _categoryService.GetCategoriesWithCondition();
-				return Ok(new { data = categories });
-			}
-			catch (Exception ex)
-			{
-				return BadRequest(new { message = ex.Message });
-			}
-		}
+		 
 	}
 }

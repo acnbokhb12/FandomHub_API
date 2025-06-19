@@ -12,6 +12,13 @@ namespace FandomHub.Application.Intefaces.Services
 {
 	public interface ICommunityService : IBaseService<Community, int>
 	{
+		Task<CommunityResponse?> GetCommunityByIdActive(int id);
+
+		Task<List<CommunityResponse>> GetAllActive();
+
 		Task<CommunityResponse> CreateCommunity(CommunityCreateRequest request, string userId);
+
+		Task<CommunityResponse?> UpdateCommunity(CommunityUpdateRequest request, string userId);
+
 	}
 }

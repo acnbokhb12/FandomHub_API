@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FandomHub.Application.DTOs.Request;
 using FandomHub.Application.DTOs.Response;
+using FandomHub.Application.Intefaces.Common;
 using FandomHub.Application.Intefaces.Repositories;
 using FandomHub.Application.Intefaces.Services;
 using FandomHub.Domain.Entities;
@@ -77,6 +78,60 @@ namespace FandomHub.Application.Services
 			var response = _mapper.Map<CommunityResponse>(createdCommunity);
 
 			return response;
+		}
+
+		public async Task<List<CommunityResponse>> GetAllActive()
+		{
+			var activeCommunities = await _communityRepo.GetAllActive();
+			return _mapper.Map<List<CommunityResponse>>(activeCommunities);
+		}
+
+		public async Task<CommunityResponse?> UpdateCommunity(CommunityUpdateRequest request, string userId)
+		{
+			try
+			{
+				var community = await _communityRepo.GetByIdActive(request.CommunityId);
+				if (community == null) return null;
+
+				DateTime now = DateTime.Now;
+				DateTime trimmed = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+
+				_mapper.Map(request, community);
+				community.UpdatedAt = DateTime.Now.TrimToSecond();
+				community.UpdatedBy = userId;
+
+				// Save to EditHistory
+				var editHistory = new EditHistory
+				{
+					TargetEntityType = nameof(Community),
+					TargetEntityId = request.CommunityId,
+					PreviousContent = null,
+					ChangeSummary = "Community updated",
+					UpdatedBy = userId,
+					UpdatedAt = DateTime.Now
+				};
+				await _editHistoryRepo.CreateAsync(editHistory); 
+
+				return _mapper.Map<CommunityResponse>(community) ;
+			}
+			catch (Exception ex)
+			{
+				throw new Exception($"Error updating community: {ex.Message}", ex);
+			}
+		}
+
+		public async Task<CommunityResponse?> GetCommunityByIdActive(int id)
+		{
+			try
+			{
+				var community = await _communityRepo.GetByIdActive(id);
+				if (community == null) return null;
+				return _mapper.Map<CommunityResponse>(community);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception($"Error fetching community by ID: {ex.Message}", ex);
+			}
 		}
 	}
 }
