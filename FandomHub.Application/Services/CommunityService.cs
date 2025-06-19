@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FandomHub.Application.Common;
 using FandomHub.Application.DTOs.Request;
 using FandomHub.Application.DTOs.Response;
 using FandomHub.Application.Intefaces.Common;
@@ -34,6 +35,26 @@ namespace FandomHub.Application.Services
 			_communityCategoryRepo = communityCategoryRepo;
 			_mapper = mapper;
 		}
+		public async Task<CommunityResponse?> GetCommunityByIdActive(int id)
+		{
+			try
+			{
+				var community = await _communityRepo.GetByIdActive(id);
+				if (community == null) return null;
+				return _mapper.Map<CommunityResponse>(community);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception($"Error fetching community by ID: {ex.Message}", ex);
+			}
+		}
+
+		public async Task<List<CommunityResponse>> GetAllActive()
+		{
+			var activeCommunities = await _communityRepo.GetAllActive();
+			return _mapper.Map<List<CommunityResponse>>(activeCommunities);
+		}
+
 		public async Task<CommunityResponse> CreateCommunity(CommunityCreateRequest request, string userId)
 		{
 			DateTime now = DateTime.Now;
@@ -80,12 +101,6 @@ namespace FandomHub.Application.Services
 			return response;
 		}
 
-		public async Task<List<CommunityResponse>> GetAllActive()
-		{
-			var activeCommunities = await _communityRepo.GetAllActive();
-			return _mapper.Map<List<CommunityResponse>>(activeCommunities);
-		}
-
 		public async Task<CommunityResponse?> UpdateCommunity(CommunityUpdateRequest request, string userId)
 		{
 			try
@@ -110,9 +125,9 @@ namespace FandomHub.Application.Services
 					UpdatedBy = userId,
 					UpdatedAt = DateTime.Now
 				};
-				await _editHistoryRepo.CreateAsync(editHistory); 
+				await _editHistoryRepo.CreateAsync(editHistory);
 
-				return _mapper.Map<CommunityResponse>(community) ;
+				return _mapper.Map<CommunityResponse>(community);
 			}
 			catch (Exception ex)
 			{
@@ -120,18 +135,74 @@ namespace FandomHub.Application.Services
 			}
 		}
 
-		public async Task<CommunityResponse?> GetCommunityByIdActive(int id)
+		public async Task<bool> DeleteCommunity(int id, string userId)
 		{
 			try
 			{
+
 				var community = await _communityRepo.GetByIdActive(id);
-				if (community == null) return null;
-				return _mapper.Map<CommunityResponse>(community);
+				if (community == null) return false;
+				community.IsActive = false;
+				community.DeleteAt = DateTime.Now.TrimToSecond();
+				community.DeleteBy = userId;
+
+				var editHistory = new EditHistory
+				{
+					TargetEntityType = nameof(Community),
+					TargetEntityId = id,
+					PreviousContent = null,
+					ChangeSummary = "Community deleted",
+					CreatedBy = userId,
+					CreatedAt = DateTime.Now.TrimToSecond()
+				};
+				await _editHistoryRepo.CreateAsync(editHistory);
+				return true;
 			}
 			catch (Exception ex)
 			{
-				throw new Exception($"Error fetching community by ID: {ex.Message}", ex);
+				throw new Exception($"Error deleting community: {ex.Message}", ex);
 			}
+		}
+
+		public async Task<PagedCommunityResponse> GetAllActivePagedAsync(PaginationRequest request, string baseUrl)
+		{
+			var validPage = request.GetValidPage();
+			var validPerPageSize = request.GetValidPerPage();
+
+			var paginatedCommunities = await _communityRepo.GetAllActivePagedAsync(validPage, validPerPageSize);
+			var communityResponses = _mapper.Map<List<CommunityResponse>>(paginatedCommunities.Items);
+
+			return new PagedCommunityResponse
+			{
+				Data = communityResponses,
+				Metadata = new PaginationMetadata
+				{
+					Page = validPage,
+					PerPage = validPerPageSize,
+					PageCount = communityResponses.Count,
+					TotalCount = paginatedCommunities.TotalCount,
+					Links = BuildPaginationLinks(paginatedCommunities, baseUrl, validPerPageSize)
+				}
+			};
+		}
+
+		private PaginationLinks BuildPaginationLinks( 
+			PaginatedList<Community> paginatedList,
+			string baseUrl,
+		    int pageSize)
+		{
+			return new PaginationLinks
+			{
+				Self = $"{baseUrl}?page={paginatedList.PageNumber}&per_page={pageSize}",
+				First = $"{baseUrl}?page=1&per_page={pageSize}",
+				Previous = paginatedList.HasPreviousPage
+					? $"{baseUrl}?page={paginatedList.PageNumber - 1}&per_page={pageSize}"
+					: null,
+				Next = paginatedList.HasNextPage
+					? $"{baseUrl}?page={paginatedList.PageNumber + 1}&per_page={pageSize}"
+					: null,
+				Last = $"{baseUrl}?page={paginatedList.TotalPages}&per_page={pageSize}"
+			};
 		}
 	}
 }

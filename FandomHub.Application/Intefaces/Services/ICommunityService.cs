@@ -20,5 +20,10 @@ namespace FandomHub.Application.Intefaces.Services
 
 		Task<CommunityResponse?> UpdateCommunity(CommunityUpdateRequest request, string userId);
 
+		Task<bool> DeleteCommunity(int id, string userId);
+
+		Task<PagedCommunityResponse> GetAllActivePagedAsync(PaginationRequest request, string baseUrl);
+
+
 	}
 }

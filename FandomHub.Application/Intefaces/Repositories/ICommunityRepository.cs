@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
+
+using FandomHub.Application.Common;
 
 namespace FandomHub.Application.Intefaces.Repositories
 {
@@ -12,5 +14,7 @@ namespace FandomHub.Application.Intefaces.Repositories
         Task<List<Community>> GetAllActive();
 
         Task<Community?> GetByIdActive(int id);
-    }
+
+		Task<PaginatedList<Community>> GetAllActivePagedAsync(int page, int pageSize);
+	}
 }

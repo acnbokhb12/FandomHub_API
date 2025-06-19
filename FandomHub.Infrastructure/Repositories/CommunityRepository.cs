@@ -1,6 +1,8 @@
-﻿using FandomHub.Application.Intefaces.Repositories;
+﻿using FandomHub.Application.Common;
+using FandomHub.Application.Intefaces.Repositories;
 using FandomHub.Domain.Entities;
 using FandomHub.Infrastructure.Data;
+using FandomHub.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,6 +22,13 @@ namespace FandomHub.Infrastructure.Repositories
 		{
 			return _context.Communities.Where(c => c.IsActive)
 				.ToListAsync();
+		}
+
+		public async Task<PaginatedList<Community>> GetAllActivePagedAsync(int page, int pageSize)
+		{
+			return await _context.Communities
+				.Where(c => c.IsActive)
+				.ToPaginatedListAsync(page, pageSize);
 		}
 
 		public Task<Community?> GetByIdActive(int id)
