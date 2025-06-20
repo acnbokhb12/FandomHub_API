@@ -9,5 +9,6 @@ namespace FandomHub.Application.Intefaces.Services
 {
 	public interface IWikiPageService : IBaseService<WikiPage, int>
 	{
+		Task<WikiPage?> CreateWikiPage(int id);
 	}
 }
