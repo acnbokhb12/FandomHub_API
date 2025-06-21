@@ -1,4 +1,6 @@
-﻿using FandomHub.Domain.Entities;
+﻿using FandomHub.Application.DTOs.Request;
+using FandomHub.Application.DTOs.Response;
+using FandomHub.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +11,6 @@ namespace FandomHub.Application.Intefaces.Services
 {
 	public interface IWikiPageService : IBaseService<WikiPage, int>
 	{
-		Task<WikiPage?> CreateWikiPage(int id);
+		Task<WikiPageResponse?> CreateWikiPage(WikiPageCreateRequest request, string userId);
 	}
 }

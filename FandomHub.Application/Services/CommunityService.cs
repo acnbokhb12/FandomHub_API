@@ -56,12 +56,9 @@ namespace FandomHub.Application.Services
 		}
 
 		public async Task<CommunityResponse> CreateCommunity(CommunityCreateRequest request, string userId)
-		{
-			DateTime now = DateTime.Now;
-			DateTime trimmed = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
-
+		{ 
 			var community = _mapper.Map<Community>(request);
-			community.CreatedAt = trimmed;
+			community.CreatedAt = DateTime.Now.TrimToSecond(); 
 			community.CreatedBy = userId;
 
 			// Save the community
@@ -91,7 +88,7 @@ namespace FandomHub.Application.Services
 				PreviousContent = null, // No previous content on create
 				ChangeSummary = "Community created",
 				CreatedBy = userId,
-				CreatedAt = trimmed
+				CreatedAt = DateTime.Now.TrimToSecond()
 			};
 			await _editHistoryRepo.CreateAsync(editHistory);
 
