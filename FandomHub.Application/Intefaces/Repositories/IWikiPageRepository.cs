@@ -1,4 +1,5 @@
-﻿using FandomHub.Domain.Entities;
+﻿using FandomHub.Application.DTOs.Response;
+using FandomHub.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace FandomHub.Application.Intefaces.Repositories
 {
 	public interface IWikiPageRepository : IBaseRepo<WikiPage, int>
 	{
-
+		Task<WikiPage?> GetWikiPageByIdAsync(int id);
 	}
 }

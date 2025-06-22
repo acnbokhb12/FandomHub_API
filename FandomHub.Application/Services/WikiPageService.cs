@@ -1,9 +1,4 @@
 ﻿using AutoMapper;
-using FandomHub.Application.DTOs.Request;
-using FandomHub.Application.DTOs.Response;
-using FandomHub.Application.Intefaces.Common;
-using FandomHub.Application.Intefaces.Repositories;
-using FandomHub.Application.Intefaces.Services;
 using FandomHub.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -62,6 +57,19 @@ namespace FandomHub.Application.Services
 			catch (Exception ex)
 			{
 				throw new Exception($"Error creating wiki page: {ex.Message}", ex);
+			}
+		}
+
+		public async Task<WikiPageResponse?> GetWikiPageByIdAsync(int id)
+		{
+			try
+			{
+				var wikiPage = await _wikiPageRepository.GetWikiPageByIdAsync(id);
+				return _mapper.Map<WikiPageResponse>(wikiPage);
+			}
+			catch
+			{
+				throw;
 			}
 		}
 	}

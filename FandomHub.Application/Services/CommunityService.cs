@@ -1,10 +1,4 @@
-﻿using AutoMapper;
-using FandomHub.Application.Common;
-using FandomHub.Application.DTOs.Request;
-using FandomHub.Application.DTOs.Response;
-using FandomHub.Application.Intefaces.Common;
-using FandomHub.Application.Intefaces.Repositories;
-using FandomHub.Application.Intefaces.Services;
+﻿using AutoMapper; 
 using FandomHub.Domain.Entities;
 using System;
 using System.Collections.Generic;

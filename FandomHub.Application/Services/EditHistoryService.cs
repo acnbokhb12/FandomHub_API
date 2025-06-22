@@ -1,6 +1,4 @@
-﻿using FandomHub.Application.Intefaces.Repositories;
-using FandomHub.Application.Intefaces.Services;
-using FandomHub.Domain.Entities;
+﻿using FandomHub.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

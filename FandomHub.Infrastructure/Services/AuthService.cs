@@ -1,15 +1,4 @@
-﻿using FandomHub.Application.DTOs.Request;
-using FandomHub.Application.DTOs.Response;
-using FandomHub.Application.Intefaces.Services;
-using FandomHub.Infrastructure.Data;
-using FandomHub.Infrastructure.Identity;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace FandomHub.Infrastructure.Services
 {

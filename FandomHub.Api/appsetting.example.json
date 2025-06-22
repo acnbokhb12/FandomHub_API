@@ -1,4 +1,8 @@
 {
+  "Middleware": {
+    "EnableLogging": true,
+    "EnablePerformanceTracking": true
+  },
   "Jwt": {
     "Key": "Your_Key",
     "Issuer": "Your_Issuer",

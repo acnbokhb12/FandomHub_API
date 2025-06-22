@@ -1,15 +1,4 @@
-﻿using FandomHub.Application.DTOs.Response;
-using FandomHub.Application.Intefaces.Repositories;
-using FandomHub.Domain.Entities;
-using FandomHub.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FandomHub.Infrastructure.Repositories
+﻿namespace FandomHub.Infrastructure.Repositories
 {
 	public class CategoryRepository : BaseRepo<Category, int>, ICategoryRepository
 	{ 

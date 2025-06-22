@@ -1,10 +1,4 @@
-﻿using FandomHub.Application.Common;
-using FandomHub.Application.Intefaces.Repositories;
-using FandomHub.Domain.Entities;
-using FandomHub.Infrastructure.Data;
-using FandomHub.Infrastructure.Extensions;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

@@ -21,7 +21,7 @@ namespace FandomHub.Api.Controllers
 
 		 
 		[HttpGet]
-		public async Task<ActionResult<PagedCommunityResponse>> GetAllActivePaging(
+		public async Task<ActionResult<PagedCommunityResponse>> GetAll(
 			[FromQuery] int page = 1,
 			[FromQuery] int per_page = 20,
 			[FromQuery] string include = "")
@@ -52,7 +52,7 @@ namespace FandomHub.Api.Controllers
 
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetCommunityById([FromRoute] int id)
+		public async Task<IActionResult> GetById([FromRoute] int id)
 		{
 			try
 			{
@@ -71,17 +71,18 @@ namespace FandomHub.Api.Controllers
 
 		[HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateCommunity([FromBody] CommunityCreateRequest request)
+        public async Task<IActionResult> Create([FromBody] CommunityCreateRequest request)
         {
             try
             {
                 string userId = GetUserId();
-                var community = await _service.CreateCommunity(request, userId);
-                return Ok(new
-                {
-                    data = community
-				});
-            }catch(Exception ex)
+                var result = await _service.CreateCommunity(request, userId);
+				return CreatedAtAction(
+					nameof(GetById),
+					new { id = result.CommunityId },
+					result);
+			}
+			catch(Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }	 
@@ -89,16 +90,13 @@ namespace FandomHub.Api.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> UpdateCommunity([FromBody] CommunityUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody] CommunityUpdateRequest request)
 		{
 			try
 			{
 				string userId = GetUserId();
-				var community = await _service.UpdateCommunity(request, userId);
-				return Ok(new
-				{
-					data = community
-				});
+				var result = await _service.UpdateCommunity(request, userId);
+				return Ok(result);
 			}
 			catch (Exception ex)
 			{
@@ -108,14 +106,14 @@ namespace FandomHub.Api.Controllers
 
 		[HttpDelete("{id}")]
 		[Authorize]
-		public async Task<IActionResult> DeleteCommunity([FromRoute] int id)
+		public async Task<IActionResult> Delete([FromRoute] int id)
 		{
 			try
 			{
 				string userId = GetUserId();
 				var result = await _service.DeleteCommunity(id, userId);
 				if (!result) return NotFound(new { message = "Community not found or you do not have permission to delete it" });
-				return Ok(new { message = "Community deleted successfully" });
+				return NoContent();
 			}
 			catch (Exception ex)
 			{

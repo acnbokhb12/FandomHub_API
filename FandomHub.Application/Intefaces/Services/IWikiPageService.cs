@@ -11,6 +11,7 @@ namespace FandomHub.Application.Intefaces.Services
 {
 	public interface IWikiPageService : IBaseService<WikiPage, int>
 	{
+		Task<WikiPageResponse?> GetWikiPageByIdAsync(int id);
 		Task<WikiPageResponse?> CreateWikiPage(WikiPageCreateRequest request, string userId);
 	}
 }

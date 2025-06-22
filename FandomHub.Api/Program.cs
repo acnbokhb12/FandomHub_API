@@ -1,3 +1,4 @@
+using FandomHub.Api.Middlewares;
 using FandomHub.Application.Common;
 using FandomHub.Application.Intefaces.Common;
 using FandomHub.Application.Intefaces.Repositories;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -120,6 +122,11 @@ builder.Services.AddIdentityCore<IdentityApplicationUser>(options =>
 .AddSignInManager()
 .AddDefaultTokenProviders();
 
+builder.Services.AddSingleton<Stopwatch>();
+builder.Services.AddScoped<PerformanceMiddleware>();
+builder.Services.AddScoped<GlobalExceptionMiddleware>();
+
+
 // Register repositories
 builder.Services.AddScoped(typeof(IBaseRepo<,>), typeof(BaseRepo<,>));
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -132,7 +139,7 @@ builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IWikiPageRepository, WikiPageRepository>();
- 
+
 
 // Register service
 builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
@@ -147,13 +154,17 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IHubCategoryService, HubCategoryService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
-builder.Services.AddScoped<IWikiPageService, WikiPageService>(); 
+builder.Services.AddScoped<IWikiPageService, WikiPageService>();
 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseMiddleware<LoggingMiddleware>();
+app.UseMiddleware<PerformanceMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

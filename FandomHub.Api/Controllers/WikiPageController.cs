@@ -17,9 +17,27 @@ namespace FandomHub.Api.Controllers
 			_wikiPageService = wikiPageService;
 		}
 
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetById([FromRoute] int id)
+		{
+			try
+			{
+				var wikiPage = await _wikiPageService.GetWikiPageByIdAsync(id);
+				if (wikiPage == null)
+				{
+					return NotFound(new { message = "Wiki page not found" });
+				}
+				return Ok(wikiPage);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving wiki page: {ex.Message}");
+			}
+		}
+
 		[HttpPost]
 		[Authorize]
-		public async Task<IActionResult> CreateWikiPage([FromBody] WikiPageCreateRequest request)
+		public async Task<IActionResult> Create([FromBody] WikiPageCreateRequest request)
 		{
 			if (request == null)
 			{
@@ -28,12 +46,12 @@ namespace FandomHub.Api.Controllers
 			try
 			{
 				string userId = GetUserId();
-				var result = await _wikiPageService.CreateWikiPage(request, userId);
-				if (result == null)
+				var response = await _wikiPageService.CreateWikiPage(request, userId);
+				if (response == null)
 				{
 					return BadRequest("Failed to create wiki page");
 				}
-				return CreatedAtAction(nameof(CreateWikiPage), new { id = result.WikiPageId }, result);
+				return CreatedAtAction(nameof(Create), new { id = response.WikiPageId }, response);
 			}
 			catch (Exception ex)
 			{
