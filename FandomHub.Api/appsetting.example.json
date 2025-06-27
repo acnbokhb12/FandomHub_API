@@ -1,4 +1,11 @@
 {
+  "EmailConfiguration": {
+    "From": "Your_Email",
+    "SmtpServer": "smtp.gmail.com",
+    "Port": 587,
+    "UserName": "Your_username",
+    "Password": "YourPass"
+  },
   "Middleware": {
     "EnableLogging": true,
     "EnablePerformanceTracking": true
