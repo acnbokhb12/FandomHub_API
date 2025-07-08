@@ -26,6 +26,7 @@ namespace FandomHub.Infrastructure.Data
 		public virtual DbSet<WikiPage> WikiPages { get; set; }
 		public virtual DbSet<Notification> Notifications { get; set; }
 		public virtual DbSet<NotificationType> NotificationTypes { get; set; }
+		public virtual DbSet<FcmToken> FcmTokens { get; set; }
 
 		private readonly string _currentUser;
 
@@ -264,6 +265,36 @@ namespace FandomHub.Infrastructure.Data
 				.WithMany()
 				.HasForeignKey(rt => rt.UserId)
 				.OnDelete(DeleteBehavior.Cascade);
+
+			modelBuilder.Entity<FcmToken>(entity =>
+			{
+				entity.HasKey(e => e.FcmTokenId);
+
+				entity.Property(e => e.UserId)
+					.IsRequired()
+					.HasMaxLength(50);
+
+				entity.Property(e => e.Token)
+					.IsRequired()
+					.HasMaxLength(500);
+
+				entity.Property(e => e.DeviceId)
+					.IsRequired()
+					.HasMaxLength(100);
+
+				entity.Property(e => e.DeviceName)
+					.HasMaxLength(100);
+
+				entity.Property(e => e.DeviceType)
+					.HasMaxLength(20);
+
+				entity.Property(e => e.AppVersion)
+					.HasMaxLength(20);
+
+				entity.HasIndex(e => e.UserId);
+				entity.HasIndex(e => e.DeviceId).IsUnique();
+				entity.HasIndex(e => e.Token);
+			});
 
 		}
 

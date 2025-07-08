@@ -127,6 +127,8 @@ builder.Services.AddScoped<PerformanceMiddleware>();
 builder.Services.AddScoped<GlobalExceptionMiddleware>();
 
 
+builder.Services.AddSingleton<FirebaseConfigurationService>();
+
 // Register repositories
 builder.Services.AddScoped(typeof(IBaseRepo<,>), typeof(BaseRepo<,>));
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -139,6 +141,8 @@ builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IWikiPageRepository, WikiPageRepository>();
+builder.Services.AddScoped<IFcmTokenRepository, FcmTokenRepository>();
+
 
 
 // Register service
@@ -165,6 +169,12 @@ var app = builder.Build();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<PerformanceMiddleware>();
+
+using (var scope = app.Services.CreateScope())
+{
+	var firebaseConfig = scope.ServiceProvider.GetRequiredService<FirebaseConfigurationService>();
+	firebaseConfig.InitializeFirebase();
+}
 
 if (app.Environment.IsDevelopment())
 {

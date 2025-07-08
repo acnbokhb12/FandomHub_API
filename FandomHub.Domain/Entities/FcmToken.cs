@@ -9,6 +9,7 @@ namespace FandomHub.Domain.Entities
 {
 	public class FcmToken
 	{
+		[Key]
 		public int FcmTokenId {get; set; }
 		[Required]
 		public string UserId { get; set; }
