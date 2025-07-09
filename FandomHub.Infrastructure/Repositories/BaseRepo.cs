@@ -12,7 +12,7 @@
 			_context.Set<T>().Add(entity);
 			await _context.SaveChangesAsync();
 			return entity;
-		}
+		} 
 
 		public async Task<bool> Delete(Tkey id)
 		{

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace FandomHub.Application.Intefaces.Services
 {
-	public interface IFcmTokenService : IBaseService<FcmToken, int>
+	public interface IFcmService
 	{
-		Task<bool> SaveDeviceTokenAsync(FcmTokenRequest request, string userId); 
+		Task<bool> SendNotificationAsync(string token, string title, string body);
 	}
 }

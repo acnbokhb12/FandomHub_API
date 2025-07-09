@@ -105,7 +105,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// ===== Add DbContext =====
+// Database
 builder.Services.AddDbContext<FandomHubDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -122,14 +122,15 @@ builder.Services.AddIdentityCore<IdentityApplicationUser>(options =>
 .AddSignInManager()
 .AddDefaultTokenProviders();
 
+// Midlewares
 builder.Services.AddSingleton<Stopwatch>();
 builder.Services.AddScoped<PerformanceMiddleware>();
 builder.Services.AddScoped<GlobalExceptionMiddleware>();
 
-
+// Firebase Configuration
 builder.Services.AddSingleton<FirebaseConfigurationService>();
 
-// Register repositories
+// Repositories
 builder.Services.AddScoped(typeof(IBaseRepo<,>), typeof(BaseRepo<,>));
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICommunityRepository, CommunityRepository>();
@@ -145,7 +146,7 @@ builder.Services.AddScoped<IFcmTokenRepository, FcmTokenRepository>();
 
 
 
-// Register service
+// Services
 builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
@@ -159,8 +160,12 @@ builder.Services.AddScoped<IHubCategoryService, HubCategoryService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IWikiPageService, WikiPageService>();
+builder.Services.AddScoped<IFcmTokenService, FcmTokenService>();
+builder.Services.AddScoped<IFcmService, FcmService>();
 
 
+
+// Mapping
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
