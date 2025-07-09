@@ -25,10 +25,10 @@ namespace FandomHub.Infrastructure.Repositories
 				.ToListAsync();
 		}
 
-		public async Task<FcmToken?> GetTokenByDeviceIdAsync(string deviceId)
+		public async Task<FcmToken?> GetTokenByUniqueIdAsync(string uniqueId)
 		{
 			return await _context.FcmTokens
-				.FirstOrDefaultAsync(fcm => fcm.DeviceId == deviceId);
+				.FirstOrDefaultAsync(fcm => fcm.UniqueId == uniqueId);
 		}
 
 		public async Task SaveTokenAsync(FcmTokenRequest request, string userId)

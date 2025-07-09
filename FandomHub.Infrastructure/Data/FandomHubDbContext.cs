@@ -278,6 +278,10 @@ namespace FandomHub.Infrastructure.Data
 					.IsRequired()
 					.HasMaxLength(500);
 
+				entity.Property(e => e.UniqueId)
+					.IsRequired()
+					.HasMaxLength(100);
+
 				entity.Property(e => e.DeviceId)
 					.IsRequired()
 					.HasMaxLength(100);

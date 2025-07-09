@@ -26,7 +26,7 @@ namespace FandomHub.Application.Services
 
 		public async Task<bool> SaveDeviceTokenAsync(FcmTokenRequest request, string userId)
 		{
-			var existingDevice = await _fcmTokenRepo.GetTokenByDeviceIdAsync(request.DeviceId);
+			var existingDevice = await _fcmTokenRepo.GetTokenByUniqueIdAsync(request.DeviceId);
 			if(existingDevice != null)
 			{
 				if(existingDevice.Token != request.Token)
@@ -38,8 +38,8 @@ namespace FandomHub.Application.Services
 				existingDevice.LastLogin = DateTime.Now.TrimToSecond();
 				existingDevice.UpdatedAt = DateTime.Now.TrimToSecond();
 				existingDevice.AppVersion = request.AppVersion;
-				existingDevice.DeviceName = request.DeviceName;
-				existingDevice.DeviceType = request.DeviceType;
+				//existingDevice.DeviceName = request.DeviceName;
+				//existingDevice.DeviceType = request.DeviceType;
 				return await _fcmTokenRepo.SaveChangeAsync();
 			}
 			else

@@ -10,7 +10,7 @@ namespace FandomHub.Application.Intefaces.Repositories
 	{
 		Task SaveTokenAsync(FcmTokenRequest request, string userId);
 
-		Task<FcmToken?> GetTokenByDeviceIdAsync(string deviceId);
+		Task<FcmToken?> GetTokenByUniqueIdAsync(string deviceId);
 
 		Task<List<FcmToken>> GetActiveTokensByUserIdAsync(string userId);
 	}

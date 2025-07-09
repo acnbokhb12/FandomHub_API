@@ -18,7 +18,9 @@ namespace FandomHub.Domain.Entities
 		[Required]
 		public string Token { get; set; }
 		[Required]
-		public string DeviceId { get; set; }
+		public string UniqueId { get; set; }
+		
+		public string? DeviceId { get; set; }
 
 		public string? DeviceName { get; set; }
 
