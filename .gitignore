@@ -403,4 +403,4 @@ FodyWeavers.xsd
 
 FandomHub.Api/appsettings.json
 FandomHub.Api/fandomhub-message.json
-FandomHub.Infrastructure/Migrations
+FandomHub.Infrastructure/Migrations/

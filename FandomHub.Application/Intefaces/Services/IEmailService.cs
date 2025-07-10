@@ -8,5 +8,6 @@ namespace FandomHub.Application.Intefaces.Services
 {
 	public interface IEmailService
 	{
+		Task SendEmailAsync(Message message);
 	}
 }

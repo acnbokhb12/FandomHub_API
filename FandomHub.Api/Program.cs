@@ -4,10 +4,12 @@ using FandomHub.Application.Intefaces.Common;
 using FandomHub.Application.Intefaces.Repositories;
 using FandomHub.Application.Intefaces.Services;
 using FandomHub.Application.Services;
+using FandomHub.Infrastructure.Configurations;
 using FandomHub.Infrastructure.Data;
 using FandomHub.Infrastructure.Identity;
 using FandomHub.Infrastructure.Repositories;
 using FandomHub.Infrastructure.Services;
+using FluentEmail.MailKitSmtp;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -126,6 +128,29 @@ builder.Services.AddIdentityCore<IdentityApplicationUser>(options =>
 builder.Services.AddSingleton<Stopwatch>();
 builder.Services.AddScoped<PerformanceMiddleware>();
 builder.Services.AddScoped<GlobalExceptionMiddleware>();
+
+//FluentEmail Configuration
+builder.Services.AddFluentEmail(builder.Configuration["EmailConfiguration:From"])
+	.AddRazorRenderer()
+	.AddMailKitSender(new SmtpClientOptions
+	{
+		Server = builder.Configuration["EmailConfiguration:SmtpServer"],
+		Port = int.Parse(builder.Configuration["EmailConfiguration:Port"]),
+		User = builder.Configuration["EmailConfiguration:UserName"],
+		Password = builder.Configuration["EmailConfiguration:Password"],
+		UseSsl = false,
+		RequiresAuthentication = true,
+		SocketOptions = builder.Configuration["EmailConfiguration:SecureSocketOptions"] switch
+		{
+			"StartTls" => MailKit.Security.SecureSocketOptions.StartTls,
+			"SslOnConnect" => MailKit.Security.SecureSocketOptions.SslOnConnect,
+			_ => MailKit.Security.SecureSocketOptions.Auto
+		}
+	});
+
+
+//Email Configuration
+builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailConfiguration"));
 
 // Firebase Configuration
 builder.Services.AddSingleton<FirebaseConfigurationService>();

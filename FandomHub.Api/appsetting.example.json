@@ -8,7 +8,8 @@
     "SmtpServer": "smtp.gmail.com",
     "Port": 587,
     "UserName": "Your_username",
-    "Password": "YourPass"
+    "Password": "YourPass",
+    "SecureSocketOptions": "StartTls"
   },
   "Middleware": {
     "EnableLogging": true,

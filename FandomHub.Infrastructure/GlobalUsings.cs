@@ -4,6 +4,7 @@ global using FandomHub.Infrastructure.Identity;
 global using FandomHub.Infrastructure.Repositories;
 global using FandomHub.Infrastructure.Services;
 global using FandomHub.Infrastructure.Extensions;
+global using FandomHub.Infrastructure.Configurations;
 global using Microsoft.EntityFrameworkCore;
 global using System;
 global using System.Collections.Generic;
