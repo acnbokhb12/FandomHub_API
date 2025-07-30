@@ -1,0 +1,1 @@
+﻿global using FandomHub.Domain.Entities;

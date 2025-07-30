@@ -1,0 +1,90 @@
+﻿@model FandomHub.Application.DTOs.Request.WelcomeEmailRequest
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to FandomHub</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #ffffff;
+            margin: 0;
+            padding: 40px;
+            background: linear-gradient(135deg, #6b48ff, #00ddeb);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            margin: 15px 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            .button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                background: linear-gradient(45deg, #ff8e53, #ff6b6b);
+            }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #555;
+            text-align: center;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .logo {
+            display: block;
+            margin: 0 auto 30px;
+            max-width: 180px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://res.cloudinary.com/dkn16ntvy/image/upload/v1753763707/unnamed_vpt0zp.png" alt="FandomHub Logo" class="logo">
+        <h1>Welcome, @Model.Name!</h1>
+        <p>Thank you for joining FandomHub! We're absolutely thrilled to have you in our vibrant community.</p>
+        <p>Dive into the exciting world of fandoms today:</p>
+        <p><a href="https://fandomhub.com" class="button">Explore FandomHub</a></p>
+        <p>Best wishes,<br>The FandomHub Team</p>
+        <div class="footer">
+            <p>&copy; FandomHub. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
